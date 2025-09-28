@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebApiProject1.Application</name>
+    </assembly>
+    <members>
+        <member name="T:WebApiProject1.Application.SystemAppService">
+            <summary>
+            系统服务接口
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.SystemAppService.GetDescription">
+            <summary>
+            获取系统描述
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.id">
+            <summary>
+            id
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.line_no">
+            <summary>
+            line_no线别
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.grading_position">
+            <summary>
+            grading_position档位
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.max_num">
+            <summary>
+            max_num可存放最大数量
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.place_type">
+            <summary>
+            place_type放置方式 1平放 2竖放
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.power">
+            <summary>
+            power功率
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.electric">
+            <summary>
+            electric电流
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.grade">
+            <summary>
+            grade等级
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.color">
+            <summary>
+            color色系
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.item">
+            <summary>
+            item料号
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.order">
+            <summary>
+            order工单
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.region">
+            <summary>
+            region区域A区 B区
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.grading_type">
+            <summary>
+            grading_type档位类型 0-NG档 1-非NG档
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.is_use">
+            <summary>
+            is_use当前档位使用状态
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.GradingDetail.update_time">
+            <summary>
+            update_time修改时间
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.GetAllGradingDetailsAsync">
+            <summary>
+            获取所有挡位信息
+            </summary>
+            <returns>挡位信息列表</returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.GetGradingDetailByIdAsync(System.Int32)">
+            <summary>
+            根据ID查询挡位信息
+            </summary>
+            <param name="id">挡位ID</param>
+            <returns>单个挡位信息</returns>
+        </member>
+        <member name="T:WebApiProject1.Application.Test.TestAppService">
+            <summary>
+            测试接口
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.GetGradingDetailAll">
+            <summary>
+            获取挡位信息
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.GetById(System.Int32)">
+            <summary>
+            根据ID获取挡位信息
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.GetString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

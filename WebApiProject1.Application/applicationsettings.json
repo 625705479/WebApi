@@ -1,0 +1,36 @@
+﻿{
+  "$schema": "https://gitee.com/dotnetchina/Furion/raw/net6/schemas/v3/furion-schema.json",
+  "SpecificationDocumentSettings": {
+    "DocumentTitle": "Furion | 规范化接口",
+    "GroupOpenApiInfos": [
+      {
+        "Group": "Default",
+        "Title": "个人测试接口",
+        "Description": "用于个人功能测试的接口集合，包含临时调试、功能验证接口（测试完成后可删除）",
+        "Version": "1.0.0",
+        "Contact": {
+          "Name": "你的名字",
+          "Email": "你的邮箱@xxx.com"
+        }
+      },
+
+      {
+        "Group": "Success", // 修正拼写错误
+        "Title": "系统接口",
+        "Description": "系统核心业务接口集合，包含用户管理、数据查询、业务操作等正式接口（需严格遵循业务逻辑）",
+        "Version": "1.0.0",
+        "Contact": {
+          "Name": "你的名字",
+          "Email": "你的邮箱@xxx.com"
+        }
+      }
+    ]
+  },
+  "CorsAccessorSettings": {
+    "WithExposedHeaders": [
+      "access-token",
+      "x-access-token",
+      "environment"
+    ]
+  }
+}
