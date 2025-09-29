@@ -90,7 +90,7 @@
             update_time修改时间
             </summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.Services.ITestService.GetAllGradingDetailsAsync">
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.GetAllGradingDetailsAsync(WebApiProject1.Application.Test.Dtos.GradingQueryDetail)">
             <summary>
             获取所有挡位信息
             </summary>
@@ -108,7 +108,7 @@
             测试接口
             </summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.TestAppService.GetGradingDetailAll">
+        <member name="M:WebApiProject1.Application.Test.TestAppService.GetGradingDetailAll(System.String,System.String)">
             <summary>
             获取挡位信息
             </summary>

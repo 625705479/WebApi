@@ -8,7 +8,7 @@ namespace WebApiProject1.Application
         public List<object> GetDescription()
         {
             var  db = DbContext.Instance.GetConnection("SqliteDB");
-          var result= db.Queryable<object>().AS("grading_record_log", "o").ToList();
+          var result= db.Queryable<object>().AS("grading_record_log", "o")  .ToList();
             return result;
             
         }

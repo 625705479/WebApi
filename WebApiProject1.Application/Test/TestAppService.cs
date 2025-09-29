@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebApiProject1.Application.Test.Dtos;
 using WebApiProject1.Application.Test.Services;
 
 namespace WebApiProject1.Application.Test
@@ -25,9 +26,14 @@ namespace WebApiProject1.Application.Test
         /// 获取挡位信息
         /// </summary>
         [HttpPost("GetGradingDetailAll")] // 显式指定路由为 GetGradingDetailAll
-        public List<GradingDetail> GetGradingDetailAll()
+        public List<GradingDetail> GetGradingDetailAll(string grading_position, string item)
         {
-            var result = _testService.GetAllGradingDetailsAsync();
+            GradingQueryDetail gradingQuery = new GradingQueryDetail
+            {
+                grading_position = grading_position,
+                item = item
+            };
+            var result = _testService.GetAllGradingDetailsAsync(gradingQuery);
             return result;
         }
         /// <summary>

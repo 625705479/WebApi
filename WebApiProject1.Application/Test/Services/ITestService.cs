@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebApiProject1.Application.Test.Dtos;
 
 namespace WebApiProject1.Application.Test.Services
 {
@@ -12,7 +13,7 @@ namespace WebApiProject1.Application.Test.Services
         /// 获取所有挡位信息
         /// </summary>
         /// <returns>挡位信息列表</returns>
-        List<GradingDetail> GetAllGradingDetailsAsync();
+        List<GradingDetail> GetAllGradingDetailsAsync(GradingQueryDetail gradingQuery);
 
         /// <summary>
         /// 根据ID查询挡位信息
