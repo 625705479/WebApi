@@ -56,5 +56,21 @@ namespace WebApiProject1.Application.Test
         {
             return _testService.GetString();
         }
+
+        /// <summary>
+        /// 创建thing xml文件和remote thing xml文件
+        /// </summary>
+        /// <param name="ThingxmlPath">Thingxml路径</param>
+        /// <param name="RemoteThingPath">RemoteThing路径</param>
+        /// <param name="ThingTemplatespPath">ThingTemplates路径</param>
+        /// <param name="ExcelPath">ExcelPath路径</param>
+        /// <param name="originalNumber">原始目标数字</param>
+        /// <param name="RepaceNumber">替换的数字</param>
+        /// <returns></returns>
+        [HttpPost("CreateOrSaveFile")]
+        public bool CreateOrSaveFile(string ThingxmlPath, string RemoteThingPath, string ThingTemplatespPath, string ExcelPath, string originalNumber, string RepaceNumber)
+        { 
+            return _testService.CreateOrSaveFile(ThingxmlPath, RemoteThingPath, ThingTemplatespPath,  ExcelPath, originalNumber,RepaceNumber);
+        }
     }
 }

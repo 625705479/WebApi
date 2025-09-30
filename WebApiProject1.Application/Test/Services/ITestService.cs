@@ -21,7 +21,10 @@ namespace WebApiProject1.Application.Test.Services
         /// <param name="id">挡位ID</param>
         /// <returns>单个挡位信息</returns>
         GradingDetail GetGradingDetailByIdAsync(int id);
+
         string GetString();
+
+       bool CreateOrSaveFile(string ThingxmlPath,string RemoteThingPath,string ThingTemplatespPath, string ExcelPath  , string originalNumber, string RepaceNumber);
     }
 
    

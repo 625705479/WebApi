@@ -103,6 +103,135 @@
             <param name="id">挡位ID</param>
             <returns>单个挡位信息</returns>
         </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.CreateOrSaveFile(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="ThingxmlPath">Thingxml路径</param>
+            <param name="RemoteThingPath">RemoteThing路径</param>
+            <param name="ThingTemplatespPath">ThingTemplates路径</param>
+            <param name="ExcelPath">ExcelPath路径</param>
+            <param name="originalNumber">原始目标数字</param>
+            <param name="RepaceNumber">替换的数字</param>
+            <returns></returns>
+        </member>
+        <member name="T:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator">
+            <summary>
+            增强版替换XML中所有指定的值（支持多组替换对）
+            </summary>
+            
+            <summary>
+            从Excel生成XML配置文件的工具类
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.GenerateXmlFromExcel(System.String,System.String,System.String)">
+            <summary>
+            从Excel生成XML的主方法
+            </summary>
+            <param name="excelPath">Excel文件路径</param>
+            <param name="xmlPath">源XML文件路径</param>
+            <param name="outputXmlPath">输出XML文件路径，默认覆盖源文件</param>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.ReadExcelData(System.String)">
+            <summary>
+            读取Excel数据
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.GetCellValue(NPOI.SS.UserModel.ICell)">
+            <summary>
+            获取单元格的值（兼容不同数据类型）
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.ValidateAlarmList(System.Collections.Generic.List{WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.AlarmInfo})">
+            <summary>
+            验证告警列表数据
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.LoadAndValidateXmlDocument(System.String)">
+            <summary>
+            加载并验证XML文档
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.FindTargetNodes(System.Xml.Linq.XDocument)">
+            <summary>
+            查找目标节点并验证
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.ClearExistingNodes(System.Xml.Linq.XElement,System.Xml.Linq.XElement)">
+            <summary>
+            清空现有节点
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.GenerateAndAddNewNodes(System.Collections.Generic.List{WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.AlarmInfo},System.Xml.Linq.XElement,System.Xml.Linq.XElement)">
+            <summary>
+            生成并添加新节点
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.CreateAlertDefinitions(WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.AlarmInfo)">
+            <summary>
+            创建AlertDefinitions节点
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.CreateBooleanAlertDefinition(WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.AlarmInfo)">
+            <summary>
+            创建布尔类型的AlertDefinition
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.CreateNonBooleanAlertDefinition(WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.AlarmInfo)">
+            <summary>
+            创建非布尔类型的AlertDefinition
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.CreateAlertAttributes(System.String,System.String,System.Boolean)">
+            <summary>
+            创建AlertAttributes节点
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.CreatePropertyDefinition(WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.AlarmInfo,System.Int32)">
+            <summary>
+            创建PropertyDefinition节点
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.SaveXmlDocument(System.Xml.Linq.XDocument,System.String)">
+            <summary>
+            保存XML文档
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.IsBooleanType(System.String)">
+            <summary>
+            判断是否为布尔类型
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.GetValueContentByBaseType(System.String)">
+            <summary>
+            根据基础类型获取值内容
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.GetFieldDefinitionAttributes(System.String)">
+            <summary>
+            获取字段定义的属性集合
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator.CreateValueElement(System.String,System.Boolean)">
+            <summary>
+            创建值元素（根据需要使用CDATA）
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ReadNamesFromExcel(System.String,System.Int32,System.Int32)">
+            <summary>
+            从Excel读取指定列的name值（兼容.xls/.xlsx）
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.GetCellValue(NPOI.SS.UserModel.ICell)">
+            <summary>
+            获取Excel单元格的文本值（兼容不同数据类型）
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ExtractTargetPart(System.String)">
+            <summary>
+            从Thing.xml路径提取sourceThingName前缀（原逻辑保留）
+            </summary>
+        </member>
         <member name="T:WebApiProject1.Application.Test.TestAppService">
             <summary>
             测试接口
@@ -122,6 +251,18 @@
             <summary>
             
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.CreateOrSaveFile(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            创建thing xml文件和remote thing xml文件
+            </summary>
+            <param name="ThingxmlPath">Thingxml路径</param>
+            <param name="RemoteThingPath">RemoteThing路径</param>
+            <param name="ThingTemplatespPath">ThingTemplates路径</param>
+            <param name="ExcelPath">ExcelPath路径</param>
+            <param name="originalNumber">原始目标数字</param>
+            <param name="RepaceNumber">替换的数字</param>
             <returns></returns>
         </member>
     </members>

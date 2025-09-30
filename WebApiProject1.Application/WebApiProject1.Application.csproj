@@ -26,4 +26,8 @@
 		<Folder Include="System\Services\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="NPOI" Version="2.7.4" />
+	</ItemGroup>
+
 </Project>
