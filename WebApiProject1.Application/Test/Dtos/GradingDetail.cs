@@ -1,10 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-
-
-
-namespace WebApiProject1.Application.Test
+﻿namespace WebApiProject1.Application.Test
 {
     public class GradingDetail
     {

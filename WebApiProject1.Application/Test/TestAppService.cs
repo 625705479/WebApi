@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebApiProject1.Application.Test.Dtos;
+﻿using WebApiProject1.Application.Test.Dtos;
 using WebApiProject1.Application.Test.Services;
 
 namespace WebApiProject1.Application.Test
@@ -15,7 +9,7 @@ namespace WebApiProject1.Application.Test
     [ApiDescriptionSettings("Default")]
     [ApiController]
     [Route("api/[controller]")]
-    public class TestAppService: IDynamicApiController 
+    public class TestAppService : IDynamicApiController
     {
         private readonly ITestService _testService;
         public TestAppService(ITestService testService)
@@ -26,7 +20,7 @@ namespace WebApiProject1.Application.Test
         /// 获取挡位信息
         /// </summary>
         [HttpPost("GetGradingDetailAll")] // 显式指定路由为 GetGradingDetailAll
-        public List<GradingDetail> GetGradingDetailAll(string grading_position, string item)
+        public ResultData<object> GetGradingDetailAll(string grading_position, string item)
         {
             GradingQueryDetail gradingQuery = new GradingQueryDetail
             {
@@ -40,7 +34,7 @@ namespace WebApiProject1.Application.Test
         /// 根据ID获取挡位信息
         /// </summary>
         [HttpGet("GetById")]
-        public GradingDetail GetById(int id)
+        public ResultData<object> GetById(int id)
         {
 
             var result = _testService.GetGradingDetailByIdAsync(id);
@@ -69,8 +63,8 @@ namespace WebApiProject1.Application.Test
         /// <returns></returns>
         [HttpPost("CreateOrSaveFile")]
         public bool CreateOrSaveFile(string ThingxmlPath, string RemoteThingPath, string ThingTemplatespPath, string ExcelPath, string originalNumber, string RepaceNumber)
-        { 
-            return _testService.CreateOrSaveFile(ThingxmlPath, RemoteThingPath, ThingTemplatespPath,  ExcelPath, originalNumber,RepaceNumber);
+        {
+            return _testService.CreateOrSaveFile(ThingxmlPath, RemoteThingPath, ThingTemplatespPath, ExcelPath, originalNumber, RepaceNumber);
         }
     }
 }

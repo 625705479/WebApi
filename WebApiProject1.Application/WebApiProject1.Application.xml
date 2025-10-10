@@ -4,14 +4,14 @@
         <name>WebApiProject1.Application</name>
     </assembly>
     <members>
-        <member name="T:WebApiProject1.Application.SystemAppService">
+        <member name="T:WebApiProject1.Application.System.SystemAppService">
             <summary>
             系统服务接口
             </summary>
         </member>
-        <member name="M:WebApiProject1.Application.SystemAppService.GetDescription">
+        <member name="M:WebApiProject1.Application.System.SystemAppService.GetDescription">
             <summary>
-            获取系统描述
+            获取验证码
             </summary>
             <returns></returns>
         </member>
@@ -102,6 +102,11 @@
             </summary>
             <param name="id">挡位ID</param>
             <returns>单个挡位信息</returns>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Services.ResultData`1.Timestamp">
+            <summary>
+            时间戳
+            </summary>
         </member>
         <member name="M:WebApiProject1.Application.Test.Services.TestService.CreateOrSaveFile(System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>

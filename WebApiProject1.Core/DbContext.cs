@@ -1,6 +1,4 @@
 ﻿using Furion;
-using Furion.ClayObject.Extensions;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using SqlSugar;
 using System.Collections.Generic;
@@ -22,12 +20,12 @@ namespace WebApiProject1.Core
             {
                 // 这里配置全局事件，比如拦截执行 SQL
                 // 添加记录SQL日志事件
-              db.GetConnection("PostgreSQLDB").Aop.OnLogExecuting = (sql, pars) =>
-                {
-                    // 记录SQL日志
-                    sql = UtilMethods.GetSqlString(DbType.PostgreSQL, sql, pars);
-                    LogHelper.LogInformation(sql);
-                };
+                db.GetConnection("PostgreSQLDB").Aop.OnLogExecuting = (sql, pars) =>
+                  {
+                      // 记录SQL日志
+                      sql = UtilMethods.GetSqlString(DbType.PostgreSQL, sql, pars);
+                      LogHelper.LogInformation(sql);
+                  };
                 db.GetConnection("SqliteDB").Aop.OnLogExecuting = (sql, pars) =>
                 {
                     // 记录SQL日志
@@ -36,6 +34,6 @@ namespace WebApiProject1.Core
                 };
             });
 
-     
+
     }
 }

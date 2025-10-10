@@ -1,9 +1,8 @@
-﻿using static WebApiProject1.Application.SystemAppService;
-
-namespace WebApiProject1.Application
+﻿namespace WebApiProject1.Application.System.Services
 {
     public interface ISystemService
     {
-        List<object> GetDescription();
+        //获取本机系统名称
+        string GetDescription();
     }
 }

@@ -1,16 +1,21 @@
-﻿using Microsoft.IdentityModel.Logging;
+﻿using WebApiProject1.Application.Test;
 using WebApiProject1.Core;
 
-namespace WebApiProject1.Application
+namespace WebApiProject1.Application.System.Services
 {
     public class SystemService : ISystemService, ITransient
     {
-        public List<object> GetDescription()
+        public string GetDescription()
         {
-            var  db = DbContext.Instance.GetConnection("SqliteDB");
-          var result= db.Queryable<object>().AS("grading_record_log", "o")  .ToList();
-            return result;
-            
+            var db = DbContext.Instance.GetConnection("SqliteDB");
+            db.Queryable<object>().AS("grading_detail").ToList();
+            var res = Untines.GetNonNullableType(typeof(GradingDetail));
+            var x = Untines.Create();
+
+            return x.Item1;
+
         }
+
+
     }
 }

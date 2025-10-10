@@ -15,9 +15,9 @@ namespace WebApiProject1.Web.Core
             services.AddCorsAccessor();
 
             services.AddControllers()
-                    .AddInjectWithUnifyResult();
-        }
 
+              .AddInjectWithUnifyResult<YourRESTfulResultProvider>();
+        }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

@@ -1,16 +1,9 @@
-﻿using Microsoft.VisualBasic;
-using MySqlX.XDevAPI.Relational;
-using NPOI.HSSF.UserModel;
+﻿using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
-using Org.BouncyCastle.Utilities.Collections;
 using StackExchange.Profiling.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using WebApiProject1.Application.Test.Dtos;
@@ -31,7 +24,7 @@ namespace WebApiProject1.Application.Test.Services
         /// <param name="RepaceNumber">替换的数字</param>
         /// <returns></returns>
 
-        public bool CreateOrSaveFile(string ThingxmlPath, string RemoteThingPath, string ThingTemplatespPath, string ExcelPath,string originalNumber,string RepaceNumber)
+        public bool CreateOrSaveFile(string ThingxmlPath, string RemoteThingPath, string ThingTemplatespPath, string ExcelPath, string originalNumber, string RepaceNumber)
         {
             string thingOutputDir = Path.Combine(Path.GetDirectoryName(ThingxmlPath), "create_thing");
             string remoteThingOutputDir = Path.Combine(Path.GetDirectoryName(RemoteThingPath), "create_remote_thing");
@@ -61,7 +54,7 @@ namespace WebApiProject1.Application.Test.Services
                     Directory.CreateDirectory(thingOutputDir);
                     Console.WriteLine($"已创建Thing输出目录：{thingOutputDir}");
                 }
-        
+
                 // 遍历目标编号生成文件
                 foreach (string targetNumber in targetNumbers)
                 {
@@ -112,7 +105,7 @@ namespace WebApiProject1.Application.Test.Services
 
                     var xmlSettings = new XmlWriterSettings
                     {
-                        Encoding = System.Text.Encoding.UTF8,
+                        Encoding = UTF8Encoding.UTF8,
                         Indent = true,
                         IndentChars = "  ",
                         OmitXmlDeclaration = false,
@@ -171,7 +164,7 @@ namespace WebApiProject1.Application.Test.Services
 
                     var remoteXmlSettings = new XmlWriterSettings
                     {
-                        Encoding = System.Text.Encoding.UTF8,
+                        Encoding = UTF8Encoding.UTF8,
                         Indent = true,
                         IndentChars = "  ",
                         OmitXmlDeclaration = false,
@@ -224,7 +217,7 @@ namespace WebApiProject1.Application.Test.Services
                     }
 
                     // 3.2 从Excel读取name列表（列索引0=A列，行索引1=跳过表头）
-                    List<string> excelNames = ReadNamesFromExcel(ExcelPath,  0, startRow: 1);
+                    List<string> excelNames = ReadNamesFromExcel(ExcelPath, 0, startRow: 1);
                     if (excelNames.Count == 0)
                     {
                         Console.WriteLine($"警告：未从Excel读取到name数据，跳过该文件");
@@ -287,29 +280,49 @@ namespace WebApiProject1.Application.Test.Services
 
         public string GetString()
         {
-          return "Hello World";
+            return "Hello World";
         }
 
-        List<GradingDetail> ITestService.GetAllGradingDetailsAsync(GradingQueryDetail gradingQuery)
+        ResultData<object> ITestService.GetAllGradingDetailsAsync(GradingQueryDetail gradingQuery)
         {
+            ResultData<object> resultData = new();
             var db = DbContext.Instance.GetConnection("PostgreSQLDB");
-            // SqlSugar查询：查询grading_detail表，映射为GradingDetail实体
-         
-            return db.Queryable<GradingDetail>()
-                              .AS("grading_detail") // 指定表名和别名
-                              .WhereIF(gradingQuery.grading_position.HasValue(), x=>x.grading_position== gradingQuery.grading_position)
-                              .WhereIF(gradingQuery.item.HasValue(), x=>x.item.Contains(gradingQuery.item))
-                              .ToList();
+            try
+            {
+                // 执行查询并赋值
+                resultData.Data = db.Queryable<GradingDetail>()
+                                   .AS("grading_detail")
+                                   .WhereIF(gradingQuery.grading_position.HasValue(), x => x.grading_position == gradingQuery.grading_position)
+                                   .WhereIF(gradingQuery.item.HasValue(), x => x.item.Contains(gradingQuery.item))
+                                   .ToList();
+                if (resultData.Data == null)
+                {
+                    Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
+                }
+                return resultData;
+            }
+            catch
+            {
+                Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
+                return resultData;
+            }
         }
 
-        GradingDetail ITestService.GetGradingDetailByIdAsync(int id)
+        ResultData<object> ITestService.GetGradingDetailByIdAsync(int id)
         {
             var db = DbContext.Instance.GetConnection("PostgreSQLDB");
+            ResultData<object> resultData = new();
             // 按ID查询单条记录
-            return db.Queryable<GradingDetail>()
+            resultData.Data = db.Queryable<GradingDetail>()
                            .AS("grading_detail", "o")
                            .Where(g => g.id == id)
                            .First();
+            //判断dataList是否有数据
+            if (resultData.Data == null)
+            {
+                Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
+            }
+            return resultData;
         }
 
         #region 原有辅助方法（保留并适配整合逻辑）

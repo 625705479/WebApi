@@ -1,6 +1,5 @@
-﻿using Furion.DynamicApiController;
-using Microsoft.OpenApi.Validations.Rules;
-namespace WebApiProject1.Application
+﻿using WebApiProject1.Application.System.Services;
+namespace WebApiProject1.Application.System
 {
     /// <summary>
     /// 系统服务接口
@@ -17,15 +16,24 @@ namespace WebApiProject1.Application
         }
 
         /// <summary>
-        /// 获取系统描述
+        /// 获取验证码
         /// </summary>
         /// <returns></returns>
 
-        public List<object> GetDescription()
+        public string GetDescription()
         {
+
+
+
             return _systemService.GetDescription();
+
         }
 
-  
+
+
+
+
     }
+
+
 }
