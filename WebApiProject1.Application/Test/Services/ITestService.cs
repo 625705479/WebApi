@@ -1,4 +1,5 @@
 ﻿using WebApiProject1.Application.Test.Dtos;
+using WebApiProject1.Application.UntinesHelper;
 
 namespace WebApiProject1.Application.Test.Services
 {
@@ -20,6 +21,8 @@ namespace WebApiProject1.Application.Test.Services
         string GetString();
 
         bool CreateOrSaveFile(string ThingxmlPath, string RemoteThingPath, string ThingTemplatespPath, string ExcelPath, string originalNumber, string RepaceNumber);
+
+
     }
 
 

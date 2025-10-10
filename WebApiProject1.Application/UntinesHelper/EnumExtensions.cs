@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace WebApiProject1.Application
+namespace WebApiProject1.Application.UntinesHelper
 {
     public static class EnumExtensions
     {

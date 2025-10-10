@@ -103,11 +103,6 @@
             <param name="id">挡位ID</param>
             <returns>单个挡位信息</returns>
         </member>
-        <member name="P:WebApiProject1.Application.Test.Services.ResultData`1.Timestamp">
-            <summary>
-            时间戳
-            </summary>
-        </member>
         <member name="M:WebApiProject1.Application.Test.Services.TestService.CreateOrSaveFile(System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>
             
@@ -269,6 +264,11 @@
             <param name="originalNumber">原始目标数字</param>
             <param name="RepaceNumber">替换的数字</param>
             <returns></returns>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.ResultData`1.Timestamp">
+            <summary>
+            时间戳
+            </summary>
         </member>
     </members>
 </doc>

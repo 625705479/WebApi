@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace WebApiProject1.Application
+namespace WebApiProject1.Application.UntinesHelper
 {
     public static class Untines
     {
@@ -41,8 +41,8 @@ namespace WebApiProject1.Application
         public static void SetError(ResultData<object> result, EnumExtensions.MyErrorEnum myError)
         {
             result.StatusCode = 500;
-            result.ChineseError = EnumExtensions.GetChinese(myError);
-            result.EnglishError = EnumExtensions.GetEnglish(myError);
+            result.ChineseError = myError.GetChinese();
+            result.EnglishError = myError.GetEnglish();
         }
     }
 }

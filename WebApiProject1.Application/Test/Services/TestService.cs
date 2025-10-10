@@ -1,12 +1,17 @@
-﻿using NPOI.HSSF.UserModel;
+﻿using Microsoft.Extensions.Options;
+using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using StackExchange.Profiling.Internal;
+using System;
+using System.Collections;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using WebApiProject1.Application.Test.Dtos;
+using WebApiProject1.Application.UntinesHelper;
 using WebApiProject1.Core;
 
 namespace WebApiProject1.Application.Test.Services
@@ -295,10 +300,12 @@ namespace WebApiProject1.Application.Test.Services
                                    .WhereIF(gradingQuery.grading_position.HasValue(), x => x.grading_position == gradingQuery.grading_position)
                                    .WhereIF(gradingQuery.item.HasValue(), x => x.item.Contains(gradingQuery.item))
                                    .ToList();
-                if (resultData.Data == null)
+              //判断Data是可枚举类型且无元素时设置错误
+                if (resultData.Data is IEnumerable enumerable && !enumerable.Cast<object>().Any())
                 {
                     Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
                 }
+
                 return resultData;
             }
             catch
@@ -324,7 +331,7 @@ namespace WebApiProject1.Application.Test.Services
             }
             return resultData;
         }
-
+        
         #region 原有辅助方法（保留并适配整合逻辑）
         /// <summary>
         /// 增强版替换XML中所有指定的值（支持多组替换对）
@@ -867,6 +874,10 @@ namespace WebApiProject1.Application.Test.Services
             string beforeThing = afterThings.Replace(".Thing", string.Empty);
             return beforeThing + ".";
         }
+
+      
+
+     
         #endregion
     }
 }

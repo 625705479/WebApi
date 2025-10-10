@@ -1,4 +1,5 @@
 ﻿using WebApiProject1.Application.Test;
+using WebApiProject1.Application.UntinesHelper;
 using WebApiProject1.Core;
 
 namespace WebApiProject1.Application.System.Services
@@ -11,7 +12,6 @@ namespace WebApiProject1.Application.System.Services
             db.Queryable<object>().AS("grading_detail").ToList();
             var res = Untines.GetNonNullableType(typeof(GradingDetail));
             var x = Untines.Create();
-
             return x.Item1;
 
         }

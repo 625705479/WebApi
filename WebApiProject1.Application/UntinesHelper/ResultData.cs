@@ -1,4 +1,4 @@
-﻿namespace WebApiProject1.Application
+﻿namespace WebApiProject1.Application.UntinesHelper
 {
     public class ResultData<T>
     {
