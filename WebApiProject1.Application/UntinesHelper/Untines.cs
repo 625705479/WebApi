@@ -38,11 +38,12 @@ namespace WebApiProject1.Application.UntinesHelper
             return new byte[] { };
         }
         // 封装错误信息设置方法
-        public static void SetError(ResultData<object> result, EnumExtensions.MyErrorEnum myError)
+        public static void SetError(ResultData<object> result, EnumExtensions.MyErrorEnum myError, string Message=null)
         {
             result.StatusCode = 500;
             result.ChineseError = myError.GetChinese();
             result.EnglishError = myError.GetEnglish();
+            result.Message = Message;
         }
     }
 }

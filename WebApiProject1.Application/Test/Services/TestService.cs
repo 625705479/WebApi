@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Furion.DataValidation;
+using Microsoft.Extensions.Options;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -18,326 +19,7 @@ namespace WebApiProject1.Application.Test.Services
 {
     public class TestService : ITestService, ITransient
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ThingxmlPath">Thingxml路径</param>
-        /// <param name="RemoteThingPath">RemoteThing路径</param>
-        /// <param name="ThingTemplatespPath">ThingTemplates路径</param>
-        /// <param name="ExcelPath">ExcelPath路径</param>
-        /// <param name="originalNumber">原始目标数字</param>
-        /// <param name="RepaceNumber">替换的数字</param>
-        /// <returns></returns>
-
-        public bool CreateOrSaveFile(string ThingxmlPath, string RemoteThingPath, string ThingTemplatespPath, string ExcelPath, string originalNumber, string RepaceNumber)
-        {
-            string thingOutputDir = Path.Combine(Path.GetDirectoryName(ThingxmlPath), "create_thing");
-            string remoteThingOutputDir = Path.Combine(Path.GetDirectoryName(RemoteThingPath), "create_remote_thing");
-            Console.WriteLine("=== 开始处理ThingTemplates.xml ===");
-            ExcelToXmlGenerator.GenerateXmlFromExcel(ExcelPath, ThingTemplatespPath);
-            Console.WriteLine("=== 处理结束ThingTemplates.xml ===");
-            string[] targetNumbers = RepaceNumber.Split(',', StringSplitOptions.RemoveEmptyEntries);
-            try
-            {
-                // -------------------------- 步骤1：批量生成Thing.xml（原CreateThingXml逻辑） --------------------------
-                Console.WriteLine("=== 开始生成Thing.xml ===");
-                // 加载原始Thing.xml
-                if (!File.Exists(ThingxmlPath))
-                {
-                    Console.WriteLine($"错误：原始Thing.xml不存在 - {ThingxmlPath}");
-                    return false;
-                }
-                XDocument originalThingDoc = XDocument.Load(ThingxmlPath);
-
-                // 提取模块名（如从路径中获取"TDTLAMINATEDREFLUXLINEM1001"）
-                string thingModuleName = ThingxmlPath.Split('.')[2];
-                string thingDevcidata = Regex.Replace(thingModuleName, @"\d", string.Empty); // 移除数字，保留前缀
-
-                // 确保输出目录存在
-                if (!Directory.Exists(thingOutputDir))
-                {
-                    Directory.CreateDirectory(thingOutputDir);
-                    Console.WriteLine($"已创建Thing输出目录：{thingOutputDir}");
-                }
-
-                // 遍历目标编号生成文件
-                foreach (string targetNumber in targetNumbers)
-                {
-                    XDocument newThingDoc = new XDocument(originalThingDoc); // 复制文档避免污染原文件
-                    var thingNode = newThingDoc.Descendants("Thing").FirstOrDefault();
-
-                    // 1.1 替换Thing节点的name属性
-                    if (thingNode != null && thingNode.Attribute("name") != null)
-                    {
-                        thingNode.Attribute("name").Value = thingNode.Attribute("name").Value.Replace(originalNumber, targetNumber);
-                    }
-
-                    // 1.2 替换Thing节点的description属性
-                    if (thingNode != null && thingNode.Attribute("description") != null)
-                    {
-                        thingNode.Attribute("description").Value = thingNode.Attribute("description").Value.Replace(originalNumber, targetNumber);
-                    }
-
-                    // 1.3 替换所有PropertyBinding的sourceName和sourceThingName
-                    foreach (var propBinding in newThingDoc.Descendants("PropertyBinding"))
-                    {
-                        if (propBinding.Attribute("sourceName") != null)
-                            propBinding.Attribute("sourceName").Value = propBinding.Attribute("sourceName").Value.Replace(originalNumber, targetNumber);
-                        if (propBinding.Attribute("sourceThingName") != null)
-                            propBinding.Attribute("sourceThingName").Value = propBinding.Attribute("sourceThingName").Value.Replace(originalNumber, targetNumber);
-                    }
-
-                    // 1.4 替换equipmentNo的Value
-                    var equipmentNoValue = newThingDoc.Descendants("ThingProperties")
-                                                    .Elements("equipmentNo")
-                                                    .Elements("Value")
-                                                    .FirstOrDefault();
-                    if (equipmentNoValue != null)
-                    {
-                        equipmentNoValue.Value = equipmentNoValue.Value.Replace(originalNumber, targetNumber);
-                    }
-
-                    // 1.5 替换ConfigurationChange的changeReason
-                    foreach (var configChange in newThingDoc.Descendants("ConfigurationChange"))
-                    {
-                        if (configChange.Attribute("changeReason") != null)
-                            configChange.Attribute("changeReason").Value = configChange.Attribute("changeReason").Value.Replace(originalNumber, targetNumber);
-                    }
-
-                    // 生成输出路径并保存
-                    string thingOutputFileName = $"Things_TS.Module.{thingDevcidata}{targetNumber}.Alarm.Thing.xml";
-                    string thingOutputPath = Path.Combine(thingOutputDir, thingOutputFileName);
-
-                    var xmlSettings = new XmlWriterSettings
-                    {
-                        Encoding = UTF8Encoding.UTF8,
-                        Indent = true,
-                        IndentChars = "  ",
-                        OmitXmlDeclaration = false,
-                        NewLineHandling = NewLineHandling.None
-                    };
-
-                    using (var writer = XmlWriter.Create(thingOutputPath, xmlSettings))
-                    {
-                        newThingDoc.Save(writer);
-                    }
-                    Console.WriteLine($"已生成Thing文件：{thingOutputPath}");
-                }
-                Console.WriteLine("=== Thing.xml生成完成 ===");
-
-
-                // -------------------------- 步骤2：批量生成RemoteThing.xml（原CreateRemoteThingXml逻辑） --------------------------
-                Console.WriteLine("\n=== 开始生成RemoteThing.xml ===");
-                // 检查原始RemoteThing.xml是否存在
-                if (!File.Exists(RemoteThingPath))
-                {
-                    Console.WriteLine($"错误：原始RemoteThing.xml不存在 - {RemoteThingPath}");
-                    return false;
-                }
-
-                // 确保输出目录存在
-                if (!Directory.Exists(remoteThingOutputDir))
-                {
-                    Directory.CreateDirectory(remoteThingOutputDir);
-                    Console.WriteLine($"已创建RemoteThing输出目录：{remoteThingOutputDir}");
-                }
-
-                // 加载原始RemoteThing.xml
-                XDocument originalRemoteDoc = XDocument.Load(RemoteThingPath);
-                string remoteModuleName = RemoteThingPath.Split('.')[2];
-                string remoteDevcidata = Regex.Replace(remoteModuleName, @"\d", string.Empty);
-
-                // 遍历目标编号生成文件
-                foreach (string targetNumber in targetNumbers)
-                {
-                    XDocument newRemoteDoc = new XDocument(originalRemoteDoc);
-
-                    // 替换所有编号相关内容（调用辅助方法）
-                    ReplaceXmlValues(
-                        newRemoteDoc,
-                        originalNumber,          // 原始基础编号（如1001）
-                        targetNumber,            // 目标基础编号（如1002）
-                        $"{originalNumber}",    // 原始带标识编号（原逻辑保留，可根据实际调整）
-                        $"{targetNumber}",      // 目标带标识编号
-                        $"{originalNumber}_",   // 原始下划线编号（如1001_）
-                        $"{targetNumber}_"      // 目标下划线编号
-                    );
-
-                    // 生成输出路径并保存
-                    string remoteOutputFileName = $"Things_TS.Module.{remoteDevcidata}{targetNumber}.Alarm.RemoteThing.xml";
-                    string remoteOutputPath = Path.Combine(remoteThingOutputDir, remoteOutputFileName);
-
-                    var remoteXmlSettings = new XmlWriterSettings
-                    {
-                        Encoding = UTF8Encoding.UTF8,
-                        Indent = true,
-                        IndentChars = "  ",
-                        OmitXmlDeclaration = false,
-                        NewLineHandling = NewLineHandling.None
-                    };
-
-                    using (var writer = XmlWriter.Create(remoteOutputPath, remoteXmlSettings))
-                    {
-                        newRemoteDoc.Save(writer);
-                    }
-                    Console.WriteLine($"已生成RemoteThing文件：{remoteOutputPath}");
-                }
-                Console.WriteLine("=== RemoteThing.xml生成完成 ===");
-
-
-                // -------------------------- 步骤3：批量处理PropertyBinding（原PropertyBindServices逻辑） --------------------------
-                Console.WriteLine("\n=== 开始处理PropertyBinding ===");
-                // 检查Excel文件是否存在
-                if (!File.Exists(ExcelPath))
-                {
-                    Console.WriteLine($"错误：Excel文件不存在 - {ExcelPath}");
-                    return false;
-                }
-
-                // 获取所有生成的Thing.xml文件（匹配命名规则）
-                if (!Directory.Exists(thingOutputDir))
-                {
-                    Console.WriteLine($"错误：Thing输出目录不存在 - {thingOutputDir}");
-                    return false;
-                }
-                string[] generatedThingFiles = Directory.GetFiles(thingOutputDir, "Things_TS.Module.*.Alarm.Thing.xml", SearchOption.TopDirectoryOnly);
-                if (generatedThingFiles.Length == 0)
-                {
-                    Console.WriteLine($"警告：未找到生成的Thing.xml文件，跳过PropertyBinding处理");
-                    return true; // 无文件可处理，视为成功（或根据需求改为false）
-                }
-
-                // 遍历每个生成的Thing.xml，添加PropertyBinding
-                foreach (string thingFilePath in generatedThingFiles)
-                {
-                    Console.WriteLine($"\n处理文件：{thingFilePath}");
-                    XDocument thingDoc = XDocument.Load(thingFilePath);
-
-                    // 3.1 定位PropertyBindings节点
-                    var propBindingsNode = thingDoc.Descendants("PropertyBindings").FirstOrDefault();
-                    if (propBindingsNode == null)
-                    {
-                        Console.WriteLine($"警告：未找到PropertyBindings节点，跳过该文件");
-                        continue;
-                    }
-
-                    // 3.2 从Excel读取name列表（列索引0=A列，行索引1=跳过表头）
-                    List<string> excelNames = ReadNamesFromExcel(ExcelPath, 0, startRow: 1);
-                    if (excelNames.Count == 0)
-                    {
-                        Console.WriteLine($"警告：未从Excel读取到name数据，跳过该文件");
-                        continue;
-                    }
-
-                    // 3.3 提取当前Thing文件的目标编号（用于构造sourceName）
-                    string fileName = Path.GetFileNameWithoutExtension(thingFilePath);
-                    string devcidataWithNum = fileName.Split('.')[2]; // 格式：{devcidata}{targetNumber}
-                    Match numMatch = Regex.Match(devcidataWithNum, @"\d+"); // 匹配数字部分
-                    if (!numMatch.Success)
-                    {
-                        Console.WriteLine($"警告：无法提取目标编号，跳过该文件");
-                        continue;
-                    }
-                    string currentTargetNum = numMatch.Value;
-
-                    // 3.4 批量添加PropertyBinding（去重）
-                    foreach (string name in excelNames)
-                    {
-                        // 去重检查
-                        if (propBindingsNode.Elements("PropertyBinding").Any(b => b.Attribute("name")?.Value == name))
-                        {
-                            Console.WriteLine($"跳过重复绑定：name={name}");
-                            continue;
-                        }
-
-                        // 构造sourceName和sourceThingName（动态适配编号）
-                        string targetPart = ExtractTargetPart(thingFilePath);
-                        string sourceName = $"TDT_LAMINATED_REFLUX_LINE_M{currentTargetNum}_M{currentTargetNum}_PLC_{name}"; // 原格式动态化
-                        string sourceThingName = $"{targetPart}RemoteThing";
-
-                        // 创建并添加节点
-                        var bindingNode = new XElement("PropertyBinding",
-                            new XAttribute("name", name),
-                            new XAttribute("sourceName", sourceName),
-                            new XAttribute("sourceThingName", sourceThingName)
-                        );
-                        propBindingsNode.Add(bindingNode);
-                        Console.WriteLine($"添加绑定成功：name={name}");
-                    }
-
-                    // 3.5 保存修改后的Thing.xml
-                    thingDoc.Save(thingFilePath);
-                    Console.WriteLine($"文件保存成功：{thingFilePath}");
-                }
-                Console.WriteLine("=== PropertyBinding处理完成 ===");
-
-
-                // 所有步骤执行成功
-                Console.WriteLine("\n✅ 全部文件创建与处理完成！");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ 处理失败：{ex.Message}");
-                return false;
-            }
-        }
-
-        public string GetString()
-        {
-            return "Hello World";
-        }
-
-        ResultData<object> ITestService.GetAllGradingDetailsAsync(GradingQueryDetail gradingQuery)
-        {
-            ResultData<object> resultData = new();
-            var db = DbContext.Instance.GetConnection("PostgreSQLDB");
-            try
-            {
-                // 执行查询并赋值
-                resultData.Data = db.Queryable<GradingDetail>()
-                                   .AS("grading_detail")
-                                   .WhereIF(gradingQuery.grading_position.HasValue(), x => x.grading_position == gradingQuery.grading_position)
-                                   .WhereIF(gradingQuery.item.HasValue(), x => x.item.Contains(gradingQuery.item))
-                                   .ToList();
-              //判断Data是可枚举类型且无元素时设置错误
-                if (resultData.Data is IEnumerable enumerable && !enumerable.Cast<object>().Any())
-                {
-                    Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
-                }
-
-                return resultData;
-            }
-            catch
-            {
-                Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
-                return resultData;
-            }
-        }
-
-        ResultData<object> ITestService.GetGradingDetailByIdAsync(int id)
-        {
-            var db = DbContext.Instance.GetConnection("PostgreSQLDB");
-            ResultData<object> resultData = new();
-            // 按ID查询单条记录
-            resultData.Data = db.Queryable<GradingDetail>()
-                           .AS("grading_detail", "o")
-                           .Where(g => g.id == id)
-                           .First();
-            //判断dataList是否有数据
-            if (resultData.Data == null)
-            {
-                Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
-            }
-            return resultData;
-        }
-        
         #region 原有辅助方法（保留并适配整合逻辑）
-        /// <summary>
-        /// 增强版替换XML中所有指定的值（支持多组替换对）
-        /// </summary>
-        /// 
-
         /// <summary>
         /// 从Excel生成XML配置文件的工具类
         /// </summary>
@@ -781,6 +463,11 @@ namespace WebApiProject1.Application.Test.Services
 
             }
         }
+        /// <summary>
+        /// 增强版替换XML中所有指定的值（支持多组替换对）
+        /// </summary>
+        /// 
+
         private static void ReplaceXmlValues(XDocument doc, string oldVal1, string newVal1, string oldVal2, string newVal2, string oldVal3, string newVal3)
         {
             // 替换所有元素的文本内容
@@ -874,10 +561,365 @@ namespace WebApiProject1.Application.Test.Services
             string beforeThing = afterThings.Replace(".Thing", string.Empty);
             return beforeThing + ".";
         }
-
-      
-
-     
         #endregion
+
+        /// <summary>
+        /// 创建或者修改xml文件
+        /// </summary>
+        /// <param name="ThingxmlPath">Thingxml路径</param>
+        /// <param name="RemoteThingPath">RemoteThing路径</param>
+        /// <param name="ThingTemplatespPath">ThingTemplates路径</param>
+        /// <param name="ExcelPath">ExcelPath路径</param>
+        /// <param name="originalNumber">原始目标数字</param>
+        /// <param name="RepaceNumber">替换的数字</param>
+        /// <returns></returns>
+
+        public bool CreateOrSaveFile(string ThingxmlPath, string RemoteThingPath, string ThingTemplatespPath, string ExcelPath, string originalNumber, string RepaceNumber)
+        {
+            string thingOutputDir = Path.Combine(Path.GetDirectoryName(ThingxmlPath), "create_thing");
+            string remoteThingOutputDir = Path.Combine(Path.GetDirectoryName(RemoteThingPath), "create_remote_thing");
+            Console.WriteLine("=== 开始处理ThingTemplates.xml ===");
+            ExcelToXmlGenerator.GenerateXmlFromExcel(ExcelPath, ThingTemplatespPath);
+            Console.WriteLine("=== 处理结束ThingTemplates.xml ===");
+            string[] targetNumbers = RepaceNumber.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            try
+            {
+                // -------------------------- 步骤1：批量生成Thing.xml（原CreateThingXml逻辑） --------------------------
+                Console.WriteLine("=== 开始生成Thing.xml ===");
+                // 加载原始Thing.xml
+                if (!File.Exists(ThingxmlPath))
+                {
+                    Console.WriteLine($"错误：原始Thing.xml不存在 - {ThingxmlPath}");
+                    return false;
+                }
+                XDocument originalThingDoc = XDocument.Load(ThingxmlPath);
+
+                // 提取模块名（如从路径中获取"TDTLAMINATEDREFLUXLINEM1001"）
+                string thingModuleName = ThingxmlPath.Split('.')[2];
+                string thingDevcidata = Regex.Replace(thingModuleName, @"\d", string.Empty); // 移除数字，保留前缀
+
+                // 确保输出目录存在
+                if (!Directory.Exists(thingOutputDir))
+                {
+                    Directory.CreateDirectory(thingOutputDir);
+                    Console.WriteLine($"已创建Thing输出目录：{thingOutputDir}");
+                }
+
+                // 遍历目标编号生成文件
+                foreach (string targetNumber in targetNumbers)
+                {
+                    XDocument newThingDoc = new XDocument(originalThingDoc); // 复制文档避免污染原文件
+                    var thingNode = newThingDoc.Descendants("Thing").FirstOrDefault();
+
+                    // 1.1 替换Thing节点的name属性
+                    if (thingNode != null && thingNode.Attribute("name") != null)
+                    {
+                        thingNode.Attribute("name").Value = thingNode.Attribute("name").Value.Replace(originalNumber, targetNumber);
+                    }
+
+                    // 1.2 替换Thing节点的description属性
+                    if (thingNode != null && thingNode.Attribute("description") != null)
+                    {
+                        thingNode.Attribute("description").Value = thingNode.Attribute("description").Value.Replace(originalNumber, targetNumber);
+                    }
+
+                    // 1.3 替换所有PropertyBinding的sourceName和sourceThingName
+                    foreach (var propBinding in newThingDoc.Descendants("PropertyBinding"))
+                    {
+                        if (propBinding.Attribute("sourceName") != null)
+                            propBinding.Attribute("sourceName").Value = propBinding.Attribute("sourceName").Value.Replace(originalNumber, targetNumber);
+                        if (propBinding.Attribute("sourceThingName") != null)
+                            propBinding.Attribute("sourceThingName").Value = propBinding.Attribute("sourceThingName").Value.Replace(originalNumber, targetNumber);
+                    }
+
+                    // 1.4 替换equipmentNo的Value
+                    var equipmentNoValue = newThingDoc.Descendants("ThingProperties")
+                                                    .Elements("equipmentNo")
+                                                    .Elements("Value")
+                                                    .FirstOrDefault();
+                    if (equipmentNoValue != null)
+                    {
+                        equipmentNoValue.Value = equipmentNoValue.Value.Replace(originalNumber, targetNumber);
+                    }
+
+                    // 1.5 替换ConfigurationChange的changeReason
+                    foreach (var configChange in newThingDoc.Descendants("ConfigurationChange"))
+                    {
+                        if (configChange.Attribute("changeReason") != null)
+                            configChange.Attribute("changeReason").Value = configChange.Attribute("changeReason").Value.Replace(originalNumber, targetNumber);
+                    }
+
+                    // 生成输出路径并保存
+                    string thingOutputFileName = $"Things_TS.Module.{thingDevcidata}{targetNumber}.Alarm.Thing.xml";
+                    string thingOutputPath = Path.Combine(thingOutputDir, thingOutputFileName);
+
+                    var xmlSettings = new XmlWriterSettings
+                    {
+                        Encoding = UTF8Encoding.UTF8,
+                        Indent = true,
+                        IndentChars = "  ",
+                        OmitXmlDeclaration = false,
+                        NewLineHandling = NewLineHandling.None
+                    };
+
+                    using (var writer = XmlWriter.Create(thingOutputPath, xmlSettings))
+                    {
+                        newThingDoc.Save(writer);
+                    }
+                    Console.WriteLine($"已生成Thing文件：{thingOutputPath}");
+                }
+                Console.WriteLine("=== Thing.xml生成完成 ===");
+
+
+                // -------------------------- 步骤2：批量生成RemoteThing.xml（原CreateRemoteThingXml逻辑） --------------------------
+                Console.WriteLine("\n=== 开始生成RemoteThing.xml ===");
+                // 检查原始RemoteThing.xml是否存在
+                if (!File.Exists(RemoteThingPath))
+                {
+                    Console.WriteLine($"错误：原始RemoteThing.xml不存在 - {RemoteThingPath}");
+                    return false;
+                }
+
+                // 确保输出目录存在
+                if (!Directory.Exists(remoteThingOutputDir))
+                {
+                    Directory.CreateDirectory(remoteThingOutputDir);
+                    Console.WriteLine($"已创建RemoteThing输出目录：{remoteThingOutputDir}");
+                }
+
+                // 加载原始RemoteThing.xml
+                XDocument originalRemoteDoc = XDocument.Load(RemoteThingPath);
+                string remoteModuleName = RemoteThingPath.Split('.')[2];
+                string remoteDevcidata = Regex.Replace(remoteModuleName, @"\d", string.Empty);
+
+                // 遍历目标编号生成文件
+                foreach (string targetNumber in targetNumbers)
+                {
+                    XDocument newRemoteDoc = new XDocument(originalRemoteDoc);
+
+                    // 替换所有编号相关内容（调用辅助方法）
+                    ReplaceXmlValues(
+                        newRemoteDoc,
+                        originalNumber,          // 原始基础编号（如1001）
+                        targetNumber,            // 目标基础编号（如1002）
+                        $"{originalNumber}",    // 原始带标识编号（原逻辑保留，可根据实际调整）
+                        $"{targetNumber}",      // 目标带标识编号
+                        $"{originalNumber}_",   // 原始下划线编号（如1001_）
+                        $"{targetNumber}_"      // 目标下划线编号
+                    );
+
+                    // 生成输出路径并保存
+                    string remoteOutputFileName = $"Things_TS.Module.{remoteDevcidata}{targetNumber}.Alarm.RemoteThing.xml";
+                    string remoteOutputPath = Path.Combine(remoteThingOutputDir, remoteOutputFileName);
+
+                    var remoteXmlSettings = new XmlWriterSettings
+                    {
+                        Encoding = UTF8Encoding.UTF8,
+                        Indent = true,
+                        IndentChars = "  ",
+                        OmitXmlDeclaration = false,
+                        NewLineHandling = NewLineHandling.None
+                    };
+
+                    using (var writer = XmlWriter.Create(remoteOutputPath, remoteXmlSettings))
+                    {
+                        newRemoteDoc.Save(writer);
+                    }
+                    Console.WriteLine($"已生成RemoteThing文件：{remoteOutputPath}");
+                }
+                Console.WriteLine("=== RemoteThing.xml生成完成 ===");
+
+
+                // -------------------------- 步骤3：批量处理PropertyBinding（原PropertyBindServices逻辑） --------------------------
+                Console.WriteLine("\n=== 开始处理PropertyBinding ===");
+                // 检查Excel文件是否存在
+                if (!File.Exists(ExcelPath))
+                {
+                    Console.WriteLine($"错误：Excel文件不存在 - {ExcelPath}");
+                    return false;
+                }
+
+                // 获取所有生成的Thing.xml文件（匹配命名规则）
+                if (!Directory.Exists(thingOutputDir))
+                {
+                    Console.WriteLine($"错误：Thing输出目录不存在 - {thingOutputDir}");
+                    return false;
+                }
+                string[] generatedThingFiles = Directory.GetFiles(thingOutputDir, "Things_TS.Module.*.Alarm.Thing.xml", SearchOption.TopDirectoryOnly);
+                if (generatedThingFiles.Length == 0)
+                {
+                    Console.WriteLine($"警告：未找到生成的Thing.xml文件，跳过PropertyBinding处理");
+                    return true; // 无文件可处理，视为成功（或根据需求改为false）
+                }
+
+                // 遍历每个生成的Thing.xml，添加PropertyBinding
+                foreach (string thingFilePath in generatedThingFiles)
+                {
+                    Console.WriteLine($"\n处理文件：{thingFilePath}");
+                    XDocument thingDoc = XDocument.Load(thingFilePath);
+
+                    // 3.1 定位PropertyBindings节点
+                    var propBindingsNode = thingDoc.Descendants("PropertyBindings").FirstOrDefault();
+                    if (propBindingsNode == null)
+                    {
+                        Console.WriteLine($"警告：未找到PropertyBindings节点，跳过该文件");
+                        continue;
+                    }
+
+                    // 3.2 从Excel读取name列表（列索引0=A列，行索引1=跳过表头）
+                    List<string> excelNames = ReadNamesFromExcel(ExcelPath, 0, startRow: 1);
+                    if (excelNames.Count == 0)
+                    {
+                        Console.WriteLine($"警告：未从Excel读取到name数据，跳过该文件");
+                        continue;
+                    }
+
+                    // 3.3 提取当前Thing文件的目标编号（用于构造sourceName）
+                    string fileName = Path.GetFileNameWithoutExtension(thingFilePath);
+                    string devcidataWithNum = fileName.Split('.')[2]; // 格式：{devcidata}{targetNumber}
+                    Match numMatch = Regex.Match(devcidataWithNum, @"\d+"); // 匹配数字部分
+                    if (!numMatch.Success)
+                    {
+                        Console.WriteLine($"警告：无法提取目标编号，跳过该文件");
+                        continue;
+                    }
+                    string currentTargetNum = numMatch.Value;
+
+                    // 3.4 批量添加PropertyBinding（去重）
+                    foreach (string name in excelNames)
+                    {
+                        // 去重检查
+                        if (propBindingsNode.Elements("PropertyBinding").Any(b => b.Attribute("name")?.Value == name))
+                        {
+                            Console.WriteLine($"跳过重复绑定：name={name}");
+                            continue;
+                        }
+
+                        // 构造sourceName和sourceThingName（动态适配编号）
+                        string targetPart = ExtractTargetPart(thingFilePath);
+                        string sourceName = $"TDT_LAMINATED_REFLUX_LINE_M{currentTargetNum}_M{currentTargetNum}_PLC_{name}"; // 原格式动态化
+                        string sourceThingName = $"{targetPart}RemoteThing";
+
+                        // 创建并添加节点
+                        var bindingNode = new XElement("PropertyBinding",
+                            new XAttribute("name", name),
+                            new XAttribute("sourceName", sourceName),
+                            new XAttribute("sourceThingName", sourceThingName)
+                        );
+                        propBindingsNode.Add(bindingNode);
+                        Console.WriteLine($"添加绑定成功：name={name}");
+                    }
+
+                    // 3.5 保存修改后的Thing.xml
+                    thingDoc.Save(thingFilePath);
+                    Console.WriteLine($"文件保存成功：{thingFilePath}");
+                }
+                Console.WriteLine("=== PropertyBinding处理完成 ===");
+
+
+                // 所有步骤执行成功
+                Console.WriteLine("\n✅ 全部文件创建与处理完成！");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ 处理失败：{ex.Message}");
+                return false;
+            }
+        }
+
+        public string GetString()
+        {
+            return "Hello World";
+        }
+        /// <summary>
+        /// 获取所有挡位信息
+        /// </summary>
+        /// <param name="gradingQuery"></param>
+        /// <returns></returns>
+        ResultData<object> ITestService.GetAllGradingDetailsAsync(GradingQueryDetail gradingQuery)
+        {
+            ResultData<object> resultData = new();
+            var db = DbContext.Instance.GetConnection("PostgreSQLDB");
+            try
+            {
+                // 执行查询并赋值
+                resultData.Data = db.Queryable<GradingDetail>()
+                                   .AS("grading_detail")
+                                   .WhereIF(gradingQuery.grading_position.HasValue(), x => x.grading_position == gradingQuery.grading_position)
+                                   .WhereIF(gradingQuery.item.HasValue(), x => x.item.Contains(gradingQuery.item))
+                                   .WhereIF(gradingQuery.line_no.HasValue(), x => x.line_no.Contains(gradingQuery.line_no))
+                                   .WhereIF(gradingQuery.order.ToSqlValue().HasValue(), x => x.order.ToString().Contains(gradingQuery.order.ToString()))
+                                   .ToList();
+              //判断Data是可枚举类型且无元素时设置错误
+                if (resultData.Data is IEnumerable enumerable && !enumerable.Cast<object>().Any())
+                {
+                    Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
+                }
+
+                return resultData;
+            }
+            catch
+            {
+                Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
+                return resultData;
+            }
+        }
+        /// <summary>
+        /// 查询单条数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        ResultData<object> ITestService.GetGradingDetailByIdAsync(int id)
+        {
+            var db = DbContext.Instance.GetConnection("PostgreSQLDB");
+            ResultData<object> resultData = new();
+            // 按ID查询单条记录
+            resultData.Data = db.Queryable<GradingDetail>()
+                           .AS("grading_detail", "o")
+                           .Where(g => g.id == id)
+                           .First();
+            //判断dataList是否有数据
+            if (resultData.Data == null)
+            {
+                Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
+            }
+            return resultData;
+        }
+        /// <summary>
+        /// 添加或者修改
+        /// </summary>
+        /// <param name="test"></param>
+        /// <returns></returns>
+        public  ResultData<object> InsertOrUpdateDataAsync(TestTable test)
+        {
+            var db = DbContext.Instance.GetConnection("SqliteDB");
+            ResultData<object> resultData = new();
+            object res = null;
+            var x = db.Storageable<TestTable>(new TestTable { Id = test.Id, Name = test.Name ,Age = test.Age }).As("test").ToStorage();
+            res = x.AsInsertable.ExecuteCommand();
+            res = x.AsUpdateable.ExecuteCommand();
+            return resultData;
+        }
+        /// <summary>
+        /// 根据id删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ResultData<object> DeleteDataAsync(int id)
+        {
+            var db = DbContext.Instance.GetConnection("SqliteDB");
+            ResultData<object> resultData = new();
+            int res =  db.Deleteable<TestTable>()
+                               .AS("test") 
+                               .Where(t => t.Id == id) 
+                               .ExecuteCommand();
+            if(res==0)
+            {
+                Untines.SetError(resultData, EnumExtensions.MyErrorEnum.FailedToDeleteData);
+                return resultData;
+            }
+                return resultData;
+        }
     }
 }

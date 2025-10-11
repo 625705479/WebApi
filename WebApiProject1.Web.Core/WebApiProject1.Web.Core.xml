@@ -4,7 +4,7 @@
         <name>WebApiProject1.Web.Core</name>
     </assembly>
     <members>
-        <member name="M:WebApiProject1.Web.Core.YourRESTfulResultProvider.YourRESTfulResult(System.Int32,System.Object,System.Object,System.Object)">
+        <member name="M:WebApiProject1.Web.Core.YourRESTfulResultProvider.YourRESTfulResult(System.Int32,System.Object,System.Object,System.Object,System.Object)">
             <summary>
             返回 RESTful 风格结果集
             </summary>
@@ -12,6 +12,7 @@
             // <param name="data"></param>
             /// <param name="ChineseError"></param>
             /// <param name="EnglishError"></param>
+            /// <param name="Message"></param>
             /// <returns></returns>
             <returns></returns>
         </member>

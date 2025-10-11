@@ -65,9 +65,10 @@ namespace WebApiProject1.Web.Core
         /// // <param name="data"></param>
         /// /// <param name="ChineseError"></param>
         /// /// <param name="EnglishError"></param>
+        /// /// <param name="Message"></param>
         /// /// <returns></returns>
         /// <returns></returns>
-        private static ResultData<object> YourRESTfulResult(int statusCode, object data = default, object ChineseError = default, object EnglishError = default)
+        private static ResultData<object> YourRESTfulResult(int statusCode, object data = default, object ChineseError = default, object EnglishError = default,object Message=default)
         {
             return new ResultData<object>
             {
@@ -75,6 +76,7 @@ namespace WebApiProject1.Web.Core
                 Data = data,
                 ChineseError = (string)ChineseError,
                 EnglishError = (string)EnglishError,
+                Message = (string)Message,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
             };
         }

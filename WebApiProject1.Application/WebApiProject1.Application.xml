@@ -103,23 +103,7 @@
             <param name="id">挡位ID</param>
             <returns>单个挡位信息</returns>
         </member>
-        <member name="M:WebApiProject1.Application.Test.Services.TestService.CreateOrSaveFile(System.String,System.String,System.String,System.String,System.String,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="ThingxmlPath">Thingxml路径</param>
-            <param name="RemoteThingPath">RemoteThing路径</param>
-            <param name="ThingTemplatespPath">ThingTemplates路径</param>
-            <param name="ExcelPath">ExcelPath路径</param>
-            <param name="originalNumber">原始目标数字</param>
-            <param name="RepaceNumber">替换的数字</param>
-            <returns></returns>
-        </member>
         <member name="T:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator">
-            <summary>
-            增强版替换XML中所有指定的值（支持多组替换对）
-            </summary>
-            
             <summary>
             从Excel生成XML配置文件的工具类
             </summary>
@@ -217,6 +201,12 @@
             创建值元素（根据需要使用CDATA）
             </summary>
         </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ReplaceXmlValues(System.Xml.Linq.XDocument,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            增强版替换XML中所有指定的值（支持多组替换对）
+            </summary>
+            
+        </member>
         <member name="M:WebApiProject1.Application.Test.Services.TestService.ReadNamesFromExcel(System.String,System.Int32,System.Int32)">
             <summary>
             从Excel读取指定列的name值（兼容.xls/.xlsx）
@@ -231,6 +221,46 @@
             <summary>
             从Thing.xml路径提取sourceThingName前缀（原逻辑保留）
             </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.CreateOrSaveFile(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            创建或者修改xml文件
+            </summary>
+            <param name="ThingxmlPath">Thingxml路径</param>
+            <param name="RemoteThingPath">RemoteThing路径</param>
+            <param name="ThingTemplatespPath">ThingTemplates路径</param>
+            <param name="ExcelPath">ExcelPath路径</param>
+            <param name="originalNumber">原始目标数字</param>
+            <param name="RepaceNumber">替换的数字</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.WebApiProject1#Application#Test#Services#ITestService#GetAllGradingDetailsAsync(WebApiProject1.Application.Test.Dtos.GradingQueryDetail)">
+            <summary>
+            获取所有挡位信息
+            </summary>
+            <param name="gradingQuery"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.WebApiProject1#Application#Test#Services#ITestService#GetGradingDetailByIdAsync(System.Int32)">
+            <summary>
+            查询单条数据
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.InsertOrUpdateDataAsync(WebApiProject1.Application.Test.Dtos.TestTable)">
+            <summary>
+            添加或者修改
+            </summary>
+            <param name="test"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.DeleteDataAsync(System.Int32)">
+            <summary>
+            根据id删除
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
         </member>
         <member name="T:WebApiProject1.Application.Test.TestAppService">
             <summary>
@@ -249,7 +279,7 @@
         </member>
         <member name="M:WebApiProject1.Application.Test.TestAppService.GetString">
             <summary>
-            
+            获取字符串
             </summary>
             <returns></returns>
         </member>
@@ -263,6 +293,22 @@
             <param name="ExcelPath">ExcelPath路径</param>
             <param name="originalNumber">原始目标数字</param>
             <param name="RepaceNumber">替换的数字</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.InsertOrUpdateDataAsync(System.Int32,System.String,System.Int32)">
+            <summary>
+            添加或者修改数据
+            </summary>
+            <param name="id"></param>
+            <param name="name"></param>
+            <param name="age"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.DeleteDataAsync(System.Int32)">
+            <summary>
+            根据id删除
+            </summary>
+            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="P:WebApiProject1.Application.UntinesHelper.ResultData`1.Timestamp">

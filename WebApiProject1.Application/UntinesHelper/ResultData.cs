@@ -10,6 +10,7 @@
         /// 时间戳
         /// </summary>
         public long Timestamp { get; set; } = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        public string Message { get; set; }
 
     }
 }

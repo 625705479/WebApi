@@ -21,7 +21,9 @@ namespace WebApiProject1.Application.Test.Services
         string GetString();
 
         bool CreateOrSaveFile(string ThingxmlPath, string RemoteThingPath, string ThingTemplatespPath, string ExcelPath, string originalNumber, string RepaceNumber);
+        ResultData<object> InsertOrUpdateDataAsync(TestTable test);
 
+        ResultData<object> DeleteDataAsync(int id);
 
     }
 

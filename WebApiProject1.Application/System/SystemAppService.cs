@@ -1,4 +1,5 @@
 ﻿using WebApiProject1.Application.System.Services;
+using WebApiProject1.Application.UntinesHelper;
 namespace WebApiProject1.Application.System
 {
     /// <summary>
@@ -20,7 +21,7 @@ namespace WebApiProject1.Application.System
         /// </summary>
         /// <returns></returns>
 
-        public string GetDescription()
+        public ResultData<object> GetDescription()
         {
 
 

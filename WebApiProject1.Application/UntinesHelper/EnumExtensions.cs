@@ -29,8 +29,11 @@ namespace WebApiProject1.Application.UntinesHelper
             [EnumErrorInfo("查询错误", "Query Error")]
             QueryError,
             [EnumErrorInfo("挡位错误", "Gear Position Error")]
-            GearPositionError
-
+            GearPositionError,
+            [EnumErrorInfo("插入数据失败", "Data insertion failed")]
+            DataInsertionFailed,
+          [EnumErrorInfo("删除数据失败", "Failed to delete data")]
+            FailedToDeleteData,
         }
         #endregion
 
