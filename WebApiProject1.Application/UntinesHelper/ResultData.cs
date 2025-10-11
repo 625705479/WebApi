@@ -11,6 +11,8 @@
         /// </summary>
         public long Timestamp { get; set; } = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         public string Message { get; set; }
-
+        public int Pagenumber { get; set; }=1;
+        public int PageSize { get; set; } = 20;
+        public int TotalCount { get; set; }
     }
 }

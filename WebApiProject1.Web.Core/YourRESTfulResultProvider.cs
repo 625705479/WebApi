@@ -66,9 +66,12 @@ namespace WebApiProject1.Web.Core
         /// /// <param name="ChineseError"></param>
         /// /// <param name="EnglishError"></param>
         /// /// <param name="Message"></param>
+        /// /// <param name="pagenumber"></param>
+        /// /// <param name="pageSize"></param>
+        /// /// <param name="totalCount"></param>
         /// /// <returns></returns>
         /// <returns></returns>
-        private static ResultData<object> YourRESTfulResult(int statusCode, object data = default, object ChineseError = default, object EnglishError = default,object Message=default)
+        private static ResultData<object> YourRESTfulResult(int statusCode, object data = default, object ChineseError = default, object EnglishError = default,object Message=default,int pagenumber=default,int pageSize=default,int totalCount = default)
         {
             return new ResultData<object>
             {
@@ -77,6 +80,9 @@ namespace WebApiProject1.Web.Core
                 ChineseError = (string)ChineseError,
                 EnglishError = (string)EnglishError,
                 Message = (string)Message,
+                Pagenumber = pagenumber,
+                PageSize= pageSize,
+                TotalCount= totalCount,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
             };
         }

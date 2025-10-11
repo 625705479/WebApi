@@ -267,7 +267,7 @@
             测试接口
             </summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.TestAppService.GetGradingDetailAll(System.String,System.String)">
+        <member name="M:WebApiProject1.Application.Test.TestAppService.GetGradingDetailAll(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             获取挡位信息
             </summary>

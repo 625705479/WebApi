@@ -841,22 +841,20 @@ namespace WebApiProject1.Application.Test.Services
         {
             ResultData<object> resultData = new();
             var db = DbContext.Instance.GetConnection("PostgreSQLDB");
+            int totalCount = 0;
             try
             {
-                // 执行查询并赋值
-                resultData.Data = db.Queryable<GradingDetail>()
-                                   .AS("grading_detail")
-                                   .WhereIF(gradingQuery.grading_position.HasValue(), x => x.grading_position == gradingQuery.grading_position)
-                                   .WhereIF(gradingQuery.item.HasValue(), x => x.item.Contains(gradingQuery.item))
-                                   .WhereIF(gradingQuery.line_no.HasValue(), x => x.line_no.Contains(gradingQuery.line_no))
-                                   .WhereIF(gradingQuery.order.ToSqlValue().HasValue(), x => x.order.ToString().Contains(gradingQuery.order.ToString()))
-                                   .ToList();
-              //判断Data是可枚举类型且无元素时设置错误
-                if (resultData.Data is IEnumerable enumerable && !enumerable.Cast<object>().Any())
+                // 直接获取查询结果并显式指定类型，避免后续多次类型转换
+                var queryResult = db.Queryable<GradingDetail>()
+                                    .AS("grading_detail")
+                                    .WhereIF(gradingQuery.grading_position.HasValue(), x => x.grading_position == gradingQuery.grading_position)
+                                    .WhereIF(gradingQuery.item.HasValue(), x => x.item.Contains(gradingQuery.item))
+                                    .ToPageList(gradingQuery.Pagenumber, gradingQuery.PageSize,ref totalCount);
+                _ = new { TC = resultData.TotalCount = totalCount, PS = resultData.PageSize = gradingQuery.PageSize, PN = resultData.Pagenumber = gradingQuery.Pagenumber,Data = resultData.Data = queryResult };
+                if (queryResult.Count == 0)
                 {
                     Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
                 }
-
                 return resultData;
             }
             catch

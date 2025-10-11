@@ -22,12 +22,16 @@ namespace WebApiProject1.Application.Test
         /// 获取挡位信息
         /// </summary>
         [HttpPost("GetGradingDetailAll")] // 显式指定路由为 GetGradingDetailAll
-        public ResultData<object> GetGradingDetailAll(string grading_position, string item)
+        public ResultData<object> GetGradingDetailAll(string grading_position, string item,int PageSize,int Pagenumber)
         {
+            //判断PageSize和Pagenumber如果等于0则赋默认值
+            if (PageSize <= 0) PageSize = 20; if (Pagenumber <= 0) Pagenumber = 1;
             GradingQueryDetail gradingQuery = new GradingQueryDetail
             {
                 grading_position = grading_position,
-                item = item
+                item = item,
+              PageSize = PageSize  ,
+                Pagenumber = Pagenumber
             };
             var result = _testService.GetAllGradingDetailsAsync(gradingQuery);
             return result;

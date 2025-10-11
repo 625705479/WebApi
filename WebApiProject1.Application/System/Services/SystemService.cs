@@ -9,14 +9,10 @@ namespace WebApiProject1.Application.System.Services
     {
         public ResultData<object> GetDescription()
         {
-            var db = DbContext.Instance.GetConnection("SqliteDB");
-            db.Queryable<object>().AS("grading_detail").ToList();
-            var res = Untines.GetNonNullableType(typeof(GradingDetail));
-            var x = Untines.Create();
             ResultData<object> resultData = new();
+            var x = Untines.Create();
             resultData.Data = x.Item1;
             return resultData;
-
         }
 
 
