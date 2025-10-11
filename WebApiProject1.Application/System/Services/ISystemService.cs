@@ -6,5 +6,9 @@ namespace WebApiProject1.Application.System.Services
     {
         //获取本机系统名称
         ResultData<object> GetDescription();
-    }
+        //同步数据
+        ResultData<object> SynchroData();
+     
+
+        }
 }

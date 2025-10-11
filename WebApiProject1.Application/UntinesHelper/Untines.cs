@@ -22,7 +22,11 @@ namespace WebApiProject1.Application.UntinesHelper
             byte[] imageBytes = GenerateImage(code);
             return (code, imageBytes);
         }
-
+        /// <summary>
+        /// 获取随机验证码
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
         private static string GenerateCode(int length)
         {
             StringBuilder sb = new StringBuilder(length);
@@ -37,7 +41,12 @@ namespace WebApiProject1.Application.UntinesHelper
         {
             return new byte[] { };
         }
-        // 封装错误信息设置方法
+        /// <summary>
+        /// 封装错误信息设置方法
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="myError"></param>
+        /// <param name="Message"></param>
         public static void SetError(ResultData<object> result, EnumExtensions.MyErrorEnum myError, string Message=null)
         {
             result.StatusCode = 500;

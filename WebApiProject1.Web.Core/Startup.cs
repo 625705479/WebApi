@@ -17,6 +17,8 @@ namespace WebApiProject1.Web.Core
             services.AddControllers()
 
               .AddInjectWithUnifyResult<YourRESTfulResultProvider>();
+
+     
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

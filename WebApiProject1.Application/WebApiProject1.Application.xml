@@ -15,6 +15,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:WebApiProject1.Application.System.SystemAppService.SynchroData">
+            <summary>
+            同步数据
+            </summary>
+            <returns></returns>
+        </member>
         <member name="P:WebApiProject1.Application.Test.GradingDetail.id">
             <summary>
             id
@@ -311,10 +317,20 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="P:WebApiProject1.Application.UntinesHelper.ResultData`1.Timestamp">
+        <member name="M:WebApiProject1.Application.UntinesHelper.Untines.GenerateCode(System.Int32)">
             <summary>
-            时间戳
+            获取随机验证码
             </summary>
+            <param name="length"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Untines.SetError(WebApiProject1.Application.UntinesHelper.ResultData{System.Object},WebApiProject1.Application.UntinesHelper.EnumExtensions.MyErrorEnum,System.String)">
+            <summary>
+            封装错误信息设置方法
+            </summary>
+            <param name="result"></param>
+            <param name="myError"></param>
+            <param name="Message"></param>
         </member>
     </members>
 </doc>

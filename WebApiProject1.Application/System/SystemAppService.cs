@@ -29,7 +29,14 @@ namespace WebApiProject1.Application.System
             return _systemService.GetDescription();
 
         }
+        /// <summary>
+        /// 同步数据
+        /// </summary>
+        /// <returns></returns>
+        public ResultData<object> SynchroData() {
+            return _systemService.SynchroData();
 
+        }
 
 
 

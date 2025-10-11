@@ -1,7 +1,14 @@
-﻿using WebApiProject1.Application.Test;
+﻿using Furion;
+using Furion.DataEncryption;
+using Furion.Localization;
+using Furion.TaskScheduler;
+using NPOI.SS.Formula.Functions;
+using System.Linq.Expressions;
+using WebApiProject1.Application.Test;
 using WebApiProject1.Application.Test.Dtos;
 using WebApiProject1.Application.UntinesHelper;
 using WebApiProject1.Core;
+
 
 namespace WebApiProject1.Application.System.Services
 {
@@ -15,6 +22,20 @@ namespace WebApiProject1.Application.System.Services
             return resultData;
         }
 
+        public  ResultData<object> SynchroData()
+        {
+            ResultData<object> resultData = new(); var db = DbContext.Instance.GetConnection("PostgreSQLDB");
+            var queryResult = db.Queryable<GradingDetail>()
+                                   .AS("grading_detail").ToList();
+            var dto = queryResult.Adapt<List<GradingDetail>>();
+            var token = JWTEncryption.Encrypt(new Dictionary<string, object> { { "UserId", 1 } });
 
+
+
+            resultData.Data = dto;
+            return resultData;
+        }
+
+      
     }
 }
