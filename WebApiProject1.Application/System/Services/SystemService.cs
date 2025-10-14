@@ -28,10 +28,6 @@ namespace WebApiProject1.Application.System.Services
             var queryResult = db.Queryable<GradingDetail>()
                                    .AS("grading_detail").ToList();
             var dto = queryResult.Adapt<List<GradingDetail>>();
-            var token = JWTEncryption.Encrypt(new Dictionary<string, object> { { "UserId", 1 } });
-
-
-
             resultData.Data = dto;
             return resultData;
         }
