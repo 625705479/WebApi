@@ -10,7 +10,7 @@ namespace WebApiProject1.Web.Core
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddJwt<JwtHandler>();
+            //services.AddJwt<JwtHandler>();
 
             services.AddCorsAccessor();
 

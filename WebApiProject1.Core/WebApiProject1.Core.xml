@@ -14,5 +14,50 @@
             SqlSugar 数据库实例
             </summary>
         </member>
+        <member name="T:WebApiProject1.Core.Logger">
+            <summary>
+            静态日志工具类，基于Serilog实现
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Core.Logger.Debug(System.String)">
+            <summary>
+            记录Debug级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Core.Logger.Info(System.String)">
+            <summary>
+            记录Info级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Core.Logger.Warn(System.String)">
+            <summary>
+            记录Warning级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Core.Logger.Error(System.String)">
+            <summary>
+            记录Error级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Core.Logger.Error(System.Exception,System.String)">
+            <summary>
+            记录带异常的Error级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Core.Logger.Fatal(System.String)">
+            <summary>
+            记录Fatal级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Core.Logger.Fatal(System.Exception,System.String)">
+            <summary>
+            记录带异常的Fatal级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Core.Logger.CloseAndFlush">
+            <summary>
+            手动刷新并关闭日志（建议在程序退出时调用）
+            </summary>
+        </member>
     </members>
 </doc>

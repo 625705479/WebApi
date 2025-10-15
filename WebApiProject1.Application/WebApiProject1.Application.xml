@@ -317,6 +317,51 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.Logger">
+            <summary>
+            静态日志工具类，基于Serilog实现
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Logger.Debug(System.String)">
+            <summary>
+            记录Debug级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Logger.Info(System.String)">
+            <summary>
+            记录Info级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Logger.Warn(System.String)">
+            <summary>
+            记录Warning级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Logger.Error(System.String)">
+            <summary>
+            记录Error级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Logger.Error(System.Exception,System.String)">
+            <summary>
+            记录带异常的Error级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Logger.Fatal(System.String)">
+            <summary>
+            记录Fatal级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Logger.Fatal(System.Exception,System.String)">
+            <summary>
+            记录带异常的Fatal级别日志
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Logger.CloseAndFlush">
+            <summary>
+            手动刷新并关闭日志（建议在程序退出时调用）
+            </summary>
+        </member>
         <member name="M:WebApiProject1.Application.UntinesHelper.Untines.GenerateCode(System.Int32)">
             <summary>
             获取随机验证码

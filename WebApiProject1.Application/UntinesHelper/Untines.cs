@@ -49,10 +49,13 @@ namespace WebApiProject1.Application.UntinesHelper
         /// <param name="Message"></param>
         public static void SetError(ResultData<object> result, EnumExtensions.MyErrorEnum myError, string Message=null)
         {
+
             result.StatusCode = 500;
             result.ChineseError = myError.GetChinese();
             result.EnglishError = myError.GetEnglish();
             result.Message = Message;
+            Logger.Error("接口异常:"+ result.StatusCode+ result.Message+result.ChineseError+result.EnglishError);
+
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Furion.DataValidation;
+﻿using Furion.ClayObject.Extensions;
+using Furion.DataValidation;
+using K4os.Hash.xxHash;
 using Microsoft.Extensions.Options;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
@@ -830,6 +832,11 @@ namespace WebApiProject1.Application.Test.Services
 
         public string GetString()
         {
+            var db = AppContext.TryGetSwitch("PostgreSQLDB", out bool isEnabled) && isEnabled
+                ? DbContext.Instance.GetConnection("PostgreSQLDB")
+                : DbContext.Instance.GetConnection("SqliteDB");
+            db.Ado.GetDataTable("SELECT * from grading_record_mes");
+    
             return "Hello World";
         }
         /// <summary>

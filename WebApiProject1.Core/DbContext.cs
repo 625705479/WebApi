@@ -18,19 +18,21 @@ namespace WebApiProject1.Core
             App.GetConfig<List<ConnectionConfig>>("ConnectionConfigs")
             , db =>
             {
+                db.Ado.IsEnableLogEvent = true; //开启SQL执行日志
                 // 这里配置全局事件，比如拦截执行 SQL
                 // 添加记录SQL日志事件
                 db.GetConnection("PostgreSQLDB").Aop.OnLogExecuting = (sql, pars) =>
                   {
                       // 记录SQL日志
                       sql = UtilMethods.GetSqlString(DbType.PostgreSQL, sql, pars);
-                      LogHelper.LogInformation(sql);
+
+                      Logger.Info(sql);
                   };
                 db.GetConnection("SqliteDB").Aop.OnLogExecuting = (sql, pars) =>
                 {
                     // 记录SQL日志
                     sql = UtilMethods.GetSqlString(DbType.Sqlite, sql, pars);
-                    LogHelper.LogInformation(sql);
+                    Logger.Info(sql);
                 };
             });
 
