@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using WebApiProject1.Application.Test.Dtos;
 using WebApiProject1.Application.Test.Services;
 using WebApiProject1.Application.UntinesHelper;
@@ -18,20 +19,22 @@ namespace WebApiProject1.Application.Test
         {
             _testService = testService;
         }
-        /// <summary>
-        /// 获取挡位信息
-        /// </summary>
+    /// <summary>
+    /// 获取挡位信息
+    /// </summary>
+    /// <param name="grading_position">挡位名称</param>
+    /// <param name="item">料号</param>
+    /// <param name="Pagenumber">当前页码</param>
+    /// <param name="PageSize">查询记录条数</param>
+    /// <returns></returns>
         [HttpPost("GetGradingDetailAll")] // 显式指定路由为 GetGradingDetailAll
-        public ResultData<object> GetGradingDetailAll(string grading_position, string item,int PageSize,int Pagenumber)
+        public ResultData<object> GetGradingDetailAll(string grading_position, string item, int Pagenumber=1,int PageSize=20)
         {
-            //判断PageSize和Pagenumber如果等于0则赋默认值
-            if (PageSize <= 0) PageSize = 20; if (Pagenumber <= 0) Pagenumber = 1;
-            GradingQueryDetail gradingQuery = new GradingQueryDetail
+            var gradingQuery = new GradingQueryDetail
             {
-                grading_position = grading_position,
-                item = item,
-              PageSize = PageSize  ,
-                Pagenumber = Pagenumber
+                GradingDetail = new GradingDetail { grading_position = grading_position, item = item },
+                PageSize = PageSize,
+                PageNumber = Pagenumber
             };
             var result = _testService.GetAllGradingDetailsAsync(gradingQuery);
             return result;
@@ -51,7 +54,7 @@ namespace WebApiProject1.Application.Test
         /// 获取字符串
         /// </summary>
         /// <returns></returns>
-        [HttpDelete("GetString")]
+        [HttpGet("GetString")]
         public string GetString()
         {
             return _testService.GetString();
@@ -96,12 +99,19 @@ namespace WebApiProject1.Application.Test
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("DeleteDataAsync")]
+        [HttpDelete("DeleteDataAsync")]
         public ResultData<object> DeleteDataAsync(int id)
         {
     
             var result = _testService.DeleteDataAsync(id);
             return result;
+        }
+
+        public ResultData<object> GetTest()
+        {
+            ResultData<object> resultData = new ();
+            resultData.Data = SourceLevels.Warning;
+            return resultData;
         }
     }
 }

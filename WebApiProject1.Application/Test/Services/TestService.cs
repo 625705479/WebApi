@@ -851,13 +851,14 @@ namespace WebApiProject1.Application.Test.Services
             int totalCount = 0;
             try
             {
+
                 // 直接获取查询结果并显式指定类型，避免后续多次类型转换
                 var queryResult = db.Queryable<GradingDetail>()
                                     .AS("grading_detail")
-                                    .WhereIF(gradingQuery.grading_position.HasValue(), x => x.grading_position == gradingQuery.grading_position)
-                                    .WhereIF(gradingQuery.item.HasValue(), x => x.item.Contains(gradingQuery.item))
-                                    .ToPageList(gradingQuery.Pagenumber, gradingQuery.PageSize,ref totalCount);
-                _ = new { TC = resultData.TotalCount = totalCount, PS = resultData.PageSize = gradingQuery.PageSize, PN = resultData.Pagenumber = gradingQuery.Pagenumber,Data = resultData.Data = queryResult };
+                                    .WhereIF(gradingQuery.GradingDetail.grading_position.HasValue(), x => x.grading_position == gradingQuery.GradingDetail.grading_position)
+                                    .WhereIF(gradingQuery.GradingDetail.item.HasValue(), x => x.item.Contains(gradingQuery.GradingDetail.item))
+                                    .ToPageList(gradingQuery.PageNumber, gradingQuery.PageSize,ref totalCount);
+                _ = new { TC = resultData.TotalCount = totalCount, PS = resultData.PageSize = gradingQuery.PageSize, PN = resultData.Pagenumber = gradingQuery.PageNumber,Data = resultData.Data = queryResult };
                 if (queryResult.Count == 0)
                 {
                     Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
@@ -866,7 +867,7 @@ namespace WebApiProject1.Application.Test.Services
             }
             catch
             {
-                Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
+                Untines.SetError(resultData, EnumExtensions.MyErrorEnum.SystemFailed);
                 return resultData;
             }
         }

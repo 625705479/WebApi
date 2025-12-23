@@ -96,6 +96,14 @@
             update_time修改时间
             </summary>
         </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.GradingQueryDetail.GradingDetail">
+            <summary>
+            默认初始化为一个新的 GradingDetail 实例。
+            </summary>
+            <value>
+            一个 GradingDetail 类型的对象
+            </value>
+        </member>
         <member name="M:WebApiProject1.Application.Test.Services.ITestService.GetAllGradingDetailsAsync(WebApiProject1.Application.Test.Dtos.GradingQueryDetail)">
             <summary>
             获取所有挡位信息
@@ -277,6 +285,11 @@
             <summary>
             获取挡位信息
             </summary>
+            <param name="grading_position">挡位名称</param>
+            <param name="item">料号</param>
+            <param name="Pagenumber">当前页码</param>
+            <param name="PageSize">查询记录条数</param>
+            <returns></returns>
         </member>
         <member name="M:WebApiProject1.Application.Test.TestAppService.GetById(System.Int32)">
             <summary>

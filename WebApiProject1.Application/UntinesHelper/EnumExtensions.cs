@@ -34,6 +34,8 @@ namespace WebApiProject1.Application.UntinesHelper
             DataInsertionFailed,
           [EnumErrorInfo("删除数据失败", "Failed to delete data")]
             FailedToDeleteData,
+            [EnumErrorInfo("系统异常", "System Failed ")]
+            SystemFailed,
         }
         #endregion
 
