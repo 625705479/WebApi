@@ -76,7 +76,7 @@ namespace WebApiProject1.Web.Core
             return new ResultData<object>
             {
                 StatusCode = statusCode,
-                Data = data,
+                Data = (System.Collections.Generic.List<object>)data,
                 ChineseError = (string)ChineseError,
                 EnglishError = (string)EnglishError,
                 Message = (string)Message,

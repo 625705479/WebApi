@@ -2,6 +2,7 @@
 using Furion.DataValidation;
 using K4os.Hash.xxHash;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -927,5 +928,29 @@ namespace WebApiProject1.Application.Test.Services
             }
                 return resultData;
         }
+          List<UserInfo> UserList = new List<UserInfo>();
+        public ResultData<object> GetresultData()
+        {
+            UserList.Add( new UserInfo { Id = 1, UserName = "张三", Age = 25,Sex="男", IsActive = 1 });
+            UserList.Add( new UserInfo { Id = 2, UserName = "李四", Age = 30, Sex = "男", IsActive = 1 });
+            UserList.Add( new UserInfo { Id = 3, UserName = "王五", Age = 28, Sex = "女", IsActive = 0 });
+
+            return new ResultData<object>
+            {  
+                StatusCode = 200,
+                Data = UserList.ToList()
+            };
+        }
     }
+
+    internal class UserInfo
+    {
+        public int Id { get; set; }
+        public string UserName { get; set; }
+        public string Sex { get; set; }
+        public int Age { get; set; }
+        [JsonProperty("IsActive")]
+        public int IsActive { get; set; }
+    }
+
 }

@@ -18,7 +18,7 @@ namespace WebApiProject1.Application.System.Services
         {
             ResultData<object> resultData = new();
             var x = Untines.Create();
-            resultData.Data = x.Item1;
+            resultData.Data = x.Item1; // 极简赋值，避免空引用
             return resultData;
         }
 

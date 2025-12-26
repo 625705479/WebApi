@@ -107,11 +107,10 @@ namespace WebApiProject1.Application.Test
             return result;
         }
 
-        public ResultData<object> GetTest()
+        public ResultData<object> GetresultData()
         {
-            ResultData<object> resultData = new ();
-            resultData.Data = SourceLevels.Warning;
-            return resultData;
+            var result = _testService.GetresultData();
+            return result;
         }
     }
 }

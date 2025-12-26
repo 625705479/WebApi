@@ -4,6 +4,13 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+		<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+		<DockerfileContext>..\..\..</DockerfileContext>
+		<UserSecretsId>a65501c0-29ce-4c3e-a5c9-4ca7a1ca12e3</UserSecretsId>
+		<RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+		<ContainerRuntimeIdentifier>win10-x64</ContainerRuntimeIdentifier>
+		<EnableSdkContainerDebugging>True</EnableSdkContainerDebugging>
+		<ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:6.0</ContainerBaseImage>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -16,8 +23,15 @@
 		<None Remove="Controllers\**" />
 		<None Remove="wwwroot\**" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\WebApiProject1.Web.Core\WebApiProject1.Web.Core.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ContainerPort Include="443" />
 	</ItemGroup>
 	<ProjectExtensions>
 		<VisualStudio>

@@ -25,6 +25,8 @@ namespace WebApiProject1.Application.Test.Services
 
         ResultData<object> DeleteDataAsync(int id);
 
+        ResultData<object> GetresultData();
+
     }
 
 
