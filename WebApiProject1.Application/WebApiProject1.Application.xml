@@ -9,16 +9,20 @@
             系统服务接口
             </summary>
         </member>
-        <member name="M:WebApiProject1.Application.System.SystemAppService.GetDescription">
+        <member name="M:WebApiProject1.Application.System.SystemAppService.GetEntryData(System.String)">
             <summary>
-            获取验证码
+            根据实体名称获取数据
             </summary>
+            <param name="EntryDataName"></param>
             <returns></returns>
         </member>
-        <member name="M:WebApiProject1.Application.System.SystemAppService.SynchroData">
+        <member name="M:WebApiProject1.Application.System.SystemAppService.DelEntryData(System.String,System.String,System.String)">
             <summary>
-            同步数据
+            根据实体名称删除
             </summary>
+            <param name="EntryDataName">实体名称</param>
+            <param name="primaryKeyName">主键或者条件</param>
+            <param name="KeyValue">值</param>
             <returns></returns>
         </member>
         <member name="P:WebApiProject1.Application.Test.GradingDetail.id">
@@ -373,6 +377,340 @@
         <member name="M:WebApiProject1.Application.UntinesHelper.Logger.CloseAndFlush">
             <summary>
             手动刷新并关闭日志（建议在程序退出时调用）
+            </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.SQLiteHelper">
+            <summary>
+            SQLiteHelper帮助类
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.SQLiteHelper.connection">
+            <summary>
+            获取连接字符串
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.Query(System.String)">
+            <summary>
+            无实体查询入口，用于动态表查询
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.ExecuteDynamicQuery(System.String,System.Data.SQLite.SQLiteParameter[])">
+            <summary>
+            执行原始SQL查询，返回动态结果集
+            </summary>
+            <param name="sql">SQL查询语句</param>
+            <param name="parameters">查询参数</param>
+            <returns>动态对象列表</returns>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.SQLiteHelper.DynamicQueryBuilder">
+            <summary>
+            动态查询构建器，支持链式调用
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.DynamicQueryBuilder.Where(System.String,System.Object[])">
+            <summary>
+            添加WHERE条件
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.DynamicQueryBuilder.OrderBy(System.String)">
+            <summary>
+            添加排序条件
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.DynamicQueryBuilder.Skip(System.Int32)">
+            <summary>
+            分页：跳过指定数量的记录
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.DynamicQueryBuilder.Take(System.Int32)">
+            <summary>
+            分页：获取指定数量的记录
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.DynamicQueryBuilder.ToList">
+            <summary>
+            执行查询并返回动态结果集
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.DynamicQueryBuilder.FirstOrDefault">
+            <summary>
+            执行查询并返回第一行数据
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.DynamicQueryBuilder.Count">
+            <summary>
+            计算查询结果总数
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.DynamicQueryBuilder.GetSingleObject(System.String)">
+            <summary>
+            查询单个字段的值并返回
+            </summary>
+            <param name="fieldName">要查询的字段名</param>
+            <returns>字段的值，如果没有找到则返回null</returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.Queryable``1">
+            <summary>
+            获取实体的查询对象
+            </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.SQLiteHelper.JoinInfo">
+            <summary>
+            连表查询信息
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.SQLiteHelper.JoinInfo.JoinEntityType">
+            <summary>
+            连接的实体类型
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.SQLiteHelper.JoinInfo.JoinType">
+            <summary>
+            连接类型（INNER JOIN / LEFT JOIN）
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.SQLiteHelper.JoinInfo.OnExpression">
+            <summary>
+            连接条件表达式
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.SQLiteHelper.JoinInfo.Alias">
+            <summary>
+            连接表别名（如 "c" 代表 Class 表）
+            </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.SQLiteHelper.SqliteQueryable`1">
+            <summary>
+            SQLite 查询对象，支持链式调用
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.SqliteQueryable`1.Where(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            添加查询条件
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.SqliteQueryable`1.OrderBy(System.String,System.Boolean)">
+            <summary>
+            添加排序条件
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.SqliteQueryable`1.InnerJoin``1(System.Linq.Expressions.Expression{System.Func{`0,``0,System.Boolean}},System.String)">
+            <summary>
+             执行内连接查询（Inner Join）
+            </summary>
+            <typeparam name="TJoin"></typeparam>
+            <param name="onExpression"></param>
+            <param name="alias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.SqliteQueryable`1.LeftJoin``1(System.Linq.Expressions.Expression{System.Func{`0,``0,System.Boolean}},System.String)">
+            <summary>
+             执行左连接查询（Left Join）
+            </summary>
+            <typeparam name="TJoin"></typeparam>
+            <param name="onExpression"></param>
+            <param name="alias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.SqliteQueryable`1.Select``2(System.Linq.Expressions.Expression{System.Func{`0,``0,``1}})">
+            <summary>
+            新增：连表查询结果投影（支持多表字段选择）
+            </summary>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="selectExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.SqliteQueryable`1.ToList``1">
+            <summary>
+            改造 ToList 方法，支持连表 SQL 生成
+            </summary>
+            <typeparam name="TResult"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.SQLiteHelper.SqliteQueryable`1.ExpressionToSqlConverter">
+            <summary>
+            表达式转 SQL 工具类
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.CreateNewDatabase(System.String)">
+            <summary>
+            创建数据库
+            </summary>
+            <param name="binPath"></param>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.EnsureTableExists(System.String,System.Reflection.PropertyInfo[])">
+            <summary>
+            自动创建表（基于实体类属性）
+            </summary>
+            <param name="_tableName"></param>
+            <param name="_properties"></param>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.GetAllGrades(System.String,System.Data.SQLite.SQLiteParameter[])">
+            <summary>
+            查询所有记录(包括列注释)
+            </summary>
+            <param name="sql"></param> 
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.ExecuteQuery(System.String,System.Data.SQLite.SQLiteParameter[])">
+            <summary>
+            执行查询并返回 DataTable
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.ExecuteNonQuery(System.String,System.Data.SQLite.SQLiteParameter[])">
+            <summary>
+            非查询(增删改)
+            </summary>
+            <param name="sql"></param>
+            <param name="parameters"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.GenerateEntitiesFromDataTables(System.Collections.Generic.Dictionary{System.String,System.Data.DataTable},System.String,System.String)">
+            <summary>
+            批量生成实体类代码自带特性Table
+            </summary>
+            <param name="tables"></param>
+            <param name="namespaceName"></param>
+            <param name="outputDirectory"></param>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.GetAllTableNames">
+            <summary>
+             获取数据库中所有表名(去掉系统表)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.GenerateEntityFromDataTable(System.Data.DataTable,System.String,System.String,System.String)">
+            <summary>
+            根据DataTable结构生成实体类代码并保存到指定路径
+            </summary>
+            <param name="table">数据表</param>
+            <param name="className">实体类名称</param>
+            <param name="namespaceName">命名空间名称</param>
+            <param name="outputDirectory">输出目录路径</param>
+            <returns>生成的文件路径</returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.GenerateEntityCode(System.Data.DataTable,System.String,System.String)">
+            <summary>
+            根据DataTable结构生成实体类代码
+            </summary>
+            <param name="table">数据表</param>
+            <param name="className">实体类名称</param>
+            <param name="namespaceName">命名空间名称</param>
+            <returns>生成的C#代码</returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.QueryEntities``1(System.String,System.Object)">
+            <summary>
+            带参数的通用查询方法（返回符合条件的实体列表）
+            </summary>
+            <typeparam name="T">实体类型</typeparam>
+            <param name="condition">查询条件（如 "Name = @Name AND Age > @Age"）</param>
+            <param name="parameters">参数对象（属性名对应条件中的@参数名，如 new { Name = "张三", Age = 20 }）</param>
+            <returns>实体列表</returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.InsertEntity``1(``0,System.Boolean)">
+            <summary>
+            插入实体用特[AutoIncrement]标记自增主键
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="entity"></param>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.InsertEntities``1(System.Collections.Generic.List{``0})">
+            <summary>
+            批量插入实体（List集合）
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="entities"></param>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.DeleteEntity``1(System.Object,System.String,System.Boolean)">
+            <summary>
+            删除实体
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="primaryKeyNameValue"></param>
+            <param name="primaryKeyName"></param>
+            <param name="deleteTable"></param>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.UpdateEntity``1(``0,System.Boolean,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            修改实体 
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="entity"></param>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.SnakeCaseToCamelCase(System.String)">
+            <summary>
+            将下划线命名法（snake_case）转换为驼峰命名法（camelCase）
+            </summary>
+            <param name="snakeCaseName">下划线分隔的名称（如corner_flip_rule）</param>
+            <returns>驼峰命名的结果（如cornerFlipRule）</returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.GetPrimaryKeyProperty(System.Type)">
+            <summary>
+            获取实体类的主键属性
+            </summary>
+            <param name="entityType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.CamelToPascalCase(System.String)">
+            <summary>
+            将驼峰命名法（camelCase）转换为帕斯卡命名法（PascalCase，首字母大写）
+            </summary>
+            <param name="camelCase">驼峰命名的字符串（如 cornerFlipRule）</param>
+            <returns>首字母大写的字符串（如 CornerFlipRule）</returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.GetTableName(System.Type)">
+            <summary>
+            获取实体类的表名（优先使用Table特性，否则用类名）
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.Dispose">
+            <summary>
+            释放资源
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.ConvertDbValue(System.Object,System.Type)">
+            <summary>
+            处理数据库值到目标类型的转换（解决常见类型不匹配问题）
+            </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.SQLiteHelper.JoinType">
+            <summary>
+            定义连接类型枚举
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.GetSqliteType(System.Type,System.Boolean)">
+            <summary>
+            类型映射
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.ParseSqliteColumnComments(System.String)">
+            <summary>
+            解析 SQLite 表创建语句中的字段注释
+            </summary>
+            <param name="createSql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.BeginTransaction">
+            <summary>
+            开启事务
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.CommitTransaction">
+            <summary>
+            提交事务
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.SQLiteHelper.RollbackTransaction">
+            <summary>
+            回滚事务
             </summary>
         </member>
         <member name="M:WebApiProject1.Application.UntinesHelper.Untines.GenerateCode(System.Int32)">

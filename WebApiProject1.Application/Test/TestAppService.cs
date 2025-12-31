@@ -112,5 +112,12 @@ namespace WebApiProject1.Application.Test
             var result = _testService.GetresultData();
             return result;
         }
+
+        public ResultData<object> Getresult()
+        {
+            var result = _testService.GetResult();
+   
+            return result;
+        }
     }
 }

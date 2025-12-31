@@ -36,6 +36,7 @@ namespace WebApiProject1.Application.UntinesHelper
             FailedToDeleteData,
             [EnumErrorInfo("系统异常", "System Failed ")]
             SystemFailed,
+
         }
         #endregion
 

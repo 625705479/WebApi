@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using WebApiProject1.Application.Test.Dtos;
 using WebApiProject1.Application.UntinesHelper;
 using WebApiProject1.Core;
+using static WebApiProject1.Application.System.Services.SystemService;
 
 namespace WebApiProject1.Application.Test.Services
 {
@@ -939,6 +940,23 @@ namespace WebApiProject1.Application.Test.Services
             {  
                 StatusCode = 200,
                 Data = UserList.ToList()
+            };
+        }
+
+        public ResultData<object> GetResult()
+        {
+            var db = DbContext.Instance.GetConnection("SqliteDB");
+          var resdata=  db.SqlQueryable<object>("SELECT * FROM grading_detail").ToPageList(1,4);
+          var resdatacount=  db.SqlQueryable<object>("SELECT * FROM grading_detail").ToList().Count;
+
+      
+            return new ResultData<object>
+            {
+                StatusCode = 200,
+                Data = resdata,
+                PageSize=4,
+                Pagenumber=1,
+                TotalCount=resdatacount
             };
         }
     }

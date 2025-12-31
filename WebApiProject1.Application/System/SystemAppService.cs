@@ -15,28 +15,50 @@ namespace WebApiProject1.Application.System
         {
             _systemService = systemService;
         }
-
         /// <summary>
-        /// 获取验证码
+        /// 根据实体名称获取数据
         /// </summary>
+        /// <param name="EntryDataName"></param>
         /// <returns></returns>
+        [HttpGet("GetEntryData")]
+        public ResultData<object> GetEntryData(string EntryDataName) { 
+        
+           var result=    _systemService.GetEntryData(EntryDataName);
+       
+            return result;
 
-        public ResultData<object> GetDescription()
+        }
+        /// <summary>
+        /// 根据实体名称删除
+        /// </summary>
+        /// <param name="EntryDataName">实体名称</param>
+        /// <param name="primaryKeyName">主键或者条件</param>
+        /// <param name="KeyValue">值</param>
+        /// <returns></returns>
+        [HttpPost("DelEntryData")]
+        public ResultData<object> DelEntryData(string EntryDataName, string primaryKeyName, string KeyValue)
         {
 
+            var result = _systemService.DelEntryData(EntryDataName, primaryKeyName,  KeyValue);
 
-
-            return _systemService.GetDescription();
-
-        }
-        /// <summary>
-        /// 同步数据
-        /// </summary>
-        /// <returns></returns>
-        public ResultData<object> SynchroData() {
-            return _systemService.SynchroData();
+            return result;
 
         }
+        [HttpPost("UpdateOrAddEntryData")]
+        public ResultData<object> UpdateOrAddEntryData(string EntryDataName, string primaryKeyName, string KeyValue)
+        {
+
+            string[] xx = new string[] { primaryKeyName };
+            string[] yy = new string[] { KeyValue };
+         
+        
+            var result = _systemService.UpdateOrAddEntryData(EntryDataName, xx, yy);
+
+            return result;
+
+        }
+
+
 
 
 
