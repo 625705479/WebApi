@@ -56,16 +56,22 @@ namespace WebApiProject1.Application.System.Services
 
         }
 
-        public ResultData<object> UpdateOrAddEntryData(string EntryDataName, string[] primaryKeyName, string[] KeyValue)
+        public ResultData<object> UpdateOrAddEntryData(string EntryDataName, string[] primaryKeyName, string[] KeyValue, string WhereValue)
         {
             ResultData<object> resultData = new ResultData<object>();
             if (!string.IsNullOrEmpty(EntryDataName))
             {
-               
-            
-                SQLiteHelper.Instance.ExecuteNonQuery($"INSERT INTO {EntryDataName}('{primaryKeyName}')  VALUES ('{KeyValue}')");
+                string primaryKeyNames = primaryKeyName[0];
+                string KeyValues = KeyValue[0];
 
 
+                SQLiteHelper.Instance.ExecuteNonQuery($"INSERT INTO {EntryDataName}({primaryKeyName[0]})  VALUES ({KeyValue[0]})");
+
+
+            }
+            else if(!string.IsNullOrEmpty(EntryDataName)&& !string.IsNullOrEmpty(WhereValue))
+            {
+                SQLiteHelper.Instance.ExecuteNonQuery($"UPDATE  {EntryDataName} SET('{primaryKeyName}')  VALUES ('{KeyValue}')");
             }
 
             return resultData;

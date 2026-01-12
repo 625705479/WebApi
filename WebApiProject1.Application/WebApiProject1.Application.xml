@@ -25,6 +25,16 @@
             <param name="KeyValue">值</param>
             <returns></returns>
         </member>
+        <member name="M:WebApiProject1.Application.System.SystemAppService.UpdateOrAddEntryData(System.String,System.String,System.String,System.String)">
+            <summary>
+            根据实体名称修改
+            </summary>
+            <param name="EntryDataName">实体名称</param>
+            <param name="primaryKeyName">要修改的字段</param>
+            <param name="KeyValue">修改的值</param>
+            <param name="WhereValue">修改的值</param>
+            <returns></returns>
+        </member>
         <member name="P:WebApiProject1.Application.Test.GradingDetail.id">
             <summary>
             id

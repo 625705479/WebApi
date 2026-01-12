@@ -1,6 +1,7 @@
 ﻿using Furion;
 using Microsoft.IdentityModel.Logging;
 using SqlSugar;
+using System;
 using System.Collections.Generic;
 
 namespace WebApiProject1.Core
@@ -25,13 +26,14 @@ namespace WebApiProject1.Core
                   {
                       // 记录SQL日志
                       sql = UtilMethods.GetSqlString(DbType.PostgreSQL, sql, pars);
-
+                      Console.WriteLine(sql);
                       Logger.Info(sql);
                   };
                 db.GetConnection("SqliteDB").Aop.OnLogExecuting = (sql, pars) =>
                 {
                     // 记录SQL日志
                     sql = UtilMethods.GetSqlString(DbType.Sqlite, sql, pars);
+                    Console.WriteLine(sql);
                     Logger.Info(sql);
                 };
             });
