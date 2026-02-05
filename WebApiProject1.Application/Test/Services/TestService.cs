@@ -854,18 +854,32 @@ namespace WebApiProject1.Application.Test.Services
             try
             {
 
+
                 // 直接获取查询结果并显式指定类型，避免后续多次类型转换
-                var queryResult = db.Queryable<GradingDetail>()
+                var queryResult = db.Queryable<grading_detail>()
                                     .AS("grading_detail")
                                     .WhereIF(gradingQuery.GradingDetail.grading_position.HasValue(), x => x.grading_position == gradingQuery.GradingDetail.grading_position)
                                     .WhereIF(gradingQuery.GradingDetail.item.HasValue(), x => x.item.Contains(gradingQuery.GradingDetail.item))
                                     .ToPageList(gradingQuery.PageNumber, gradingQuery.PageSize,ref totalCount);
-                _ = new { TC = resultData.TotalCount = totalCount, PS = resultData.PageSize = gradingQuery.PageSize, PN = resultData.Pagenumber = gradingQuery.PageNumber,Data = resultData.Data = queryResult };
+
+                resultData.PageInfo = new PageInfo
+                {
+                    PageSize = gradingQuery.PageSize,
+                    PageNumber = gradingQuery.PageNumber,
+                    TotalCount = totalCount
+                };
+                resultData.BaseResponse = new BaseResponse { StatusCode=200};
+                resultData.Data = queryResult;
+
                 if (queryResult.Count == 0)
                 {
                     Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
                 }
+
                 return resultData;
+                
+                   
+               
             }
             catch
             {
@@ -883,7 +897,7 @@ namespace WebApiProject1.Application.Test.Services
             var db = DbContext.Instance.GetConnection("PostgreSQLDB");
             ResultData<object> resultData = new();
             // 按ID查询单条记录
-            resultData.Data = db.Queryable<GradingDetail>()
+            resultData.Data = db.Queryable<grading_detail>()
                            .AS("grading_detail", "o")
                            .Where(g => g.id == id)
                            .First();
@@ -892,6 +906,24 @@ namespace WebApiProject1.Application.Test.Services
             {
                 Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
             }
+             var test=new Repository<grading_detail>().AsQueryable();
+            var resdtaa = test.ToList();
+            // var resdtaa=   test.GetById(2);
+            resultData.BaseResponse = new BaseResponse {StatusCode=200 };
+            if (resultData.Data == null)
+            {
+                Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
+                return resultData;
+            }
+            else {
+                resultData.PageInfo = new PageInfo
+                {
+                    PageNumber = 1,
+                    PageSize = 1,
+                    TotalCount = 1
+                };
+            }
+
             return resultData;
         }
         /// <summary>
@@ -907,6 +939,8 @@ namespace WebApiProject1.Application.Test.Services
             var x = db.Storageable<TestTable>(new TestTable { Id = test.Id, Name = test.Name ,Age = test.Age }).As("test").ToStorage();
             res = x.AsInsertable.ExecuteCommand();
             res = x.AsUpdateable.ExecuteCommand();
+
+   
             return resultData;
         }
         /// <summary>
@@ -938,7 +972,10 @@ namespace WebApiProject1.Application.Test.Services
 
             return new ResultData<object>
             {  
-                StatusCode = 200,
+                BaseResponse = new BaseResponse
+                {
+                   StatusCode=200,
+                },
                 Data = UserList.ToList()
             };
         }
@@ -948,15 +985,19 @@ namespace WebApiProject1.Application.Test.Services
             var db = DbContext.Instance.GetConnection("SqliteDB");
           var resdata=  db.SqlQueryable<object>("SELECT * FROM grading_detail").ToPageList(1,4);
           var resdatacount=  db.SqlQueryable<object>("SELECT * FROM grading_detail").ToList().Count;
+            PageInfo pageInfo = new PageInfo
+            {
+                PageNumber = 1,    // 当前页码
+                PageSize = 4,      // 每页条数
+                TotalCount = resdatacount // 总记录数
+            };
 
-      
+
             return new ResultData<object>
             {
-                StatusCode = 200,
+                BaseResponse = new BaseResponse { StatusCode = 200 },
                 Data = resdata,
-                PageSize=4,
-                Pagenumber=1,
-                TotalCount=resdatacount
+              PageInfo= pageInfo
             };
         }
     }

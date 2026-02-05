@@ -36,6 +36,8 @@ namespace WebApiProject1.Application.UntinesHelper
             FailedToDeleteData,
             [EnumErrorInfo("系统异常", "System Failed ")]
             SystemFailed,
+            [EnumErrorInfo("接口异常500", "  Interface Exception ")]
+            InterfaceException,
 
         }
         #endregion

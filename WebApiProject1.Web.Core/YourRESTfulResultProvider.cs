@@ -75,15 +75,22 @@ namespace WebApiProject1.Web.Core
         {
             return new ResultData<object>
             {
-                StatusCode = statusCode,
-                Data = (System.Collections.Generic.List<object>)data,
-                ChineseError = (string)ChineseError,
-                EnglishError = (string)EnglishError,
-                Message = (string)Message,
-                Pagenumber = pagenumber,
-                PageSize= pageSize,
-                TotalCount= totalCount,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+              BaseResponse = new BaseResponse
+              {
+                  StatusCode = statusCode,
+                  ChineseError = (string)ChineseError,
+                  EnglishError = (string)EnglishError,
+                  Message = (string)Message,
+                  Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+              },
+                // 直接嵌套赋值 PageInfo（无需单独实例化 PageInfo）
+                PageInfo = new PageInfo
+                {
+                    PageNumber = pagenumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                },
+                Data = data
             };
         }
     }

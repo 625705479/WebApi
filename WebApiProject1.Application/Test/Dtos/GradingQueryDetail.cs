@@ -8,7 +8,7 @@
         /// <value>
         /// 一个 GradingDetail 类型的对象
         /// </value>
-        public GradingDetail GradingDetail { get; set; } = new GradingDetail();
+        public grading_detail GradingDetail { get; set; } = new grading_detail();
 
     }
 }

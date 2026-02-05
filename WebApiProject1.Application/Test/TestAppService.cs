@@ -32,7 +32,7 @@ namespace WebApiProject1.Application.Test
         {
             var gradingQuery = new GradingQueryDetail
             {
-                GradingDetail = new GradingDetail { grading_position = grading_position, item = item },
+                GradingDetail = new grading_detail { grading_position = grading_position, item = item },
                 PageSize = PageSize,
                 PageNumber = Pagenumber
             };

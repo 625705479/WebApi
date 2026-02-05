@@ -35,77 +35,77 @@
             <param name="WhereValue">修改的值</param>
             <returns></returns>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.id">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.id">
             <summary>
             id
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.line_no">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.line_no">
             <summary>
             line_no线别
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.grading_position">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.grading_position">
             <summary>
             grading_position档位
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.max_num">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.max_num">
             <summary>
             max_num可存放最大数量
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.place_type">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.place_type">
             <summary>
             place_type放置方式 1平放 2竖放
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.power">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.power">
             <summary>
             power功率
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.electric">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.electric">
             <summary>
             electric电流
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.grade">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.grade">
             <summary>
             grade等级
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.color">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.color">
             <summary>
             color色系
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.item">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.item">
             <summary>
             item料号
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.order">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.order">
             <summary>
             order工单
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.region">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.region">
             <summary>
             region区域A区 B区
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.grading_type">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.grading_type">
             <summary>
             grading_type档位类型 0-NG档 1-非NG档
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.is_use">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.is_use">
             <summary>
             is_use当前档位使用状态
             </summary>
         </member>
-        <member name="P:WebApiProject1.Application.Test.GradingDetail.update_time">
+        <member name="P:WebApiProject1.Application.Test.grading_detail.update_time">
             <summary>
             update_time修改时间
             </summary>
@@ -387,6 +387,66 @@
         <member name="M:WebApiProject1.Application.UntinesHelper.Logger.CloseAndFlush">
             <summary>
             手动刷新并关闭日志（建议在程序退出时调用）
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.ResultData`1.BaseResponse">
+            <summary>
+            接口通用响应状态基类
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.ResultData`1.PageInfo">
+            <summary>
+            分页信息（非分页场景可置为null）
+            </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.BaseResponse">
+            <summary>
+            接口通用响应状态基类（存储通用的状态/错误信息）
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.BaseResponse.ChineseError">
+            <summary>
+            中文错误信息（默认：请求成功）
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.BaseResponse.EnglishError">
+            <summary>
+            英文错误信息（默认：Request successful）
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.BaseResponse.StatusCode">
+            <summary>
+            响应状态码（默认：200 成功）
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.BaseResponse.Timestamp">
+            <summary>
+            时间戳（毫秒，默认：当前UTC时间戳）
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.BaseResponse.Message">
+            <summary>
+            附加消息（可选）
+            </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.PageInfo">
+            <summary>
+            分页信息类（专门存储分页相关参数）
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.PageInfo.PageNumber">
+            <summary>
+            当前页码
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.PageInfo.PageSize">
+            <summary>
+            每页条数
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.UntinesHelper.PageInfo.TotalCount">
+            <summary>
+            总记录数
             </summary>
         </member>
         <member name="T:WebApiProject1.Application.UntinesHelper.SQLiteHelper">

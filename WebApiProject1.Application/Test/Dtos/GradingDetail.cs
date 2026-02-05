@@ -2,7 +2,7 @@
 
 namespace WebApiProject1.Application.Test
 {
-    public class GradingDetail
+    public class grading_detail
     {
 
         /// <summary>
