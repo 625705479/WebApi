@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WebApiProject1.Application.Test
+﻿namespace WebApiProject1.Application.Test
 {
     public class grading_detail
     {

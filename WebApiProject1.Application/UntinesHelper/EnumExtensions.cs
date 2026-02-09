@@ -32,7 +32,7 @@ namespace WebApiProject1.Application.UntinesHelper
             GearPositionError,
             [EnumErrorInfo("插入数据失败", "Data insertion failed")]
             DataInsertionFailed,
-          [EnumErrorInfo("删除数据失败", "Failed to delete data")]
+            [EnumErrorInfo("删除数据失败", "Failed to delete data")]
             FailedToDeleteData,
             [EnumErrorInfo("系统异常", "System Failed ")]
             SystemFailed,

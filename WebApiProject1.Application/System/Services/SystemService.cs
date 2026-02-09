@@ -1,15 +1,4 @@
-﻿using Furion;
-using Furion.DataEncryption;
-using Furion.Localization;
-using Furion.TaskScheduler;
-using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
-using System.Linq.Expressions;
-using WebApiProject1.Application.Test;
-using WebApiProject1.Application.Test.Dtos;
-using WebApiProject1.Application.Test.Services;
-using WebApiProject1.Application.UntinesHelper;
-using WebApiProject1.Core;
+﻿using WebApiProject1.Application.UntinesHelper;
 
 
 namespace WebApiProject1.Application.System.Services
@@ -22,13 +11,13 @@ namespace WebApiProject1.Application.System.Services
             if (!string.IsNullOrEmpty(primaryKeyName))
             {
 
-              SQLiteHelper.Instance.DelEntityData(
-                  tableName: tablename,
-             primaryKeyNameValue: KeyValue,  
-              primaryKeyName: primaryKeyName,           
-                  deleteTable: false              
-                  );
-               
+                SQLiteHelper.Instance.DelEntityData(
+                    tableName: tablename,
+               primaryKeyNameValue: KeyValue,
+                primaryKeyName: primaryKeyName,
+                    deleteTable: false
+                    );
+
             }
             else
             {
@@ -69,12 +58,12 @@ namespace WebApiProject1.Application.System.Services
 
 
             }
-            else if(!string.IsNullOrEmpty(EntryDataName)&& !string.IsNullOrEmpty(WhereValue))
+            else if (!string.IsNullOrEmpty(EntryDataName) && !string.IsNullOrEmpty(WhereValue))
             {
                 SQLiteHelper.Instance.ExecuteNonQuery($"UPDATE  {EntryDataName} SET('{primaryKeyName[0]}')  VALUES ('{KeyValue[0]}')");
             }
 
             return resultData;
         }
-    } 
+    }
 }

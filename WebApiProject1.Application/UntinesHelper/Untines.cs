@@ -47,7 +47,7 @@ namespace WebApiProject1.Application.UntinesHelper
         /// <param name="result"></param>
         /// <param name="myError"></param>
         /// <param name="Message"></param>
-        public static void SetError(ResultData<object> result, EnumExtensions.MyErrorEnum myError, string Message=null)
+        public static void SetError(ResultData<object> result, EnumExtensions.MyErrorEnum myError, string Message = null)
         {
             BaseResponse baseResponse = new BaseResponse();
 
@@ -56,7 +56,7 @@ namespace WebApiProject1.Application.UntinesHelper
             baseResponse.EnglishError = myError.GetEnglish();
             baseResponse.Message = Message;
             result.BaseResponse = baseResponse;
-            Logger.Error("接口异常:"+ baseResponse.StatusCode+ baseResponse.Message+ baseResponse.ChineseError+ baseResponse.EnglishError);
+            Logger.Error("接口异常:" + baseResponse.StatusCode + baseResponse.Message + baseResponse.ChineseError + baseResponse.EnglishError);
 
         }
     }

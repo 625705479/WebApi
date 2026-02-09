@@ -45,7 +45,7 @@ namespace WebApiProject1.Application.UntinesHelper
                     {
                         if (_instance == null)
                         {
-                          var DbString= "D:\\Database\\Test.db";
+                            var DbString = "D:\\Database\\Test.db";
                             _instance = new SQLiteHelper(DbString);
                         }
                     }
@@ -1153,7 +1153,7 @@ namespace WebApiProject1.Application.UntinesHelper
             }
             catch (Exception ex)
             {
-                Logger.Error( ex.Message);
+                Logger.Error(ex.Message);
                 throw; // 可根据需要决定是否抛出或吞掉异常
             }
         }
@@ -1292,14 +1292,14 @@ namespace WebApiProject1.Application.UntinesHelper
                 Logger.Error("批量插入数据异常:" + ex.Message);
             }
         }
- /// <summary>
- /// 删除实体
- /// </summary>
- /// <typeparam name="T"></typeparam>
- /// <param name="primaryKeyNameValue"></param>
- /// <param name="primaryKeyName"></param>
- /// <param name="deleteTable"></param>
-        public void DeleteEntity<T>( object primaryKeyNameValue = null, string primaryKeyName = null, bool deleteTable = false)
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKeyNameValue"></param>
+        /// <param name="primaryKeyName"></param>
+        /// <param name="deleteTable"></param>
+        public void DeleteEntity<T>(object primaryKeyNameValue = null, string primaryKeyName = null, bool deleteTable = false)
         {
             try
             {
@@ -1336,7 +1336,7 @@ namespace WebApiProject1.Application.UntinesHelper
                             // 执行删除操作
                             int rowsAffected = command.ExecuteNonQuery();
                             Logger.Info($"{rowsAffected} 行受影响");
-                  
+
                         }
                     }
 
@@ -1357,7 +1357,7 @@ namespace WebApiProject1.Application.UntinesHelper
                 {
                     connection.Open();
 
-   
+
                     if (deleteTable == true || primaryKeyNameValue == null || primaryKeyName == null)
                     {
                         string sql = $"DELETE FROM {tableName} ";
@@ -1378,13 +1378,13 @@ namespace WebApiProject1.Application.UntinesHelper
                             command.Parameters.AddWithValue("@primaryKeyNameValue", primaryKeyNameValue);
                             //添加缓存记录
                             string sql = $"SELECT * FROM  {tableName} WHERE {primaryKeyName}={primaryKeyNameValue}";
-                           
+
                             var dt = ExecuteQuery(sql); var json = JsonConvert.SerializeObject(ConvertDataTableToDictionary(dt), Formatting.Indented);
-                        
+
                             //Utilities.SaveToFileCache(tableName + "Json", json, TimeSpan.FromMinutes(200));
                             // 执行删除操作
                             int rowsAffected = command.ExecuteNonQuery();
-                            Logger.Info($"{rowsAffected} 行受影响"+json);
+                            Logger.Info($"{rowsAffected} 行受影响" + json);
 
                         }
                     }
@@ -1399,7 +1399,7 @@ namespace WebApiProject1.Application.UntinesHelper
             }
         }
 
-    
+
         private List<Dictionary<string, object>> ConvertDataTableToDictionary(DataTable dt)
         {
             var result = new List<Dictionary<string, object>>();

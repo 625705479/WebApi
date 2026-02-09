@@ -1,15 +1,8 @@
-﻿using Furion.ClayObject.Extensions;
-using Furion.DataValidation;
-using K4os.Hash.xxHash;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using StackExchange.Profiling.Internal;
-using System;
-using System.Collections;
-using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -17,7 +10,6 @@ using System.Xml.Linq;
 using WebApiProject1.Application.Test.Dtos;
 using WebApiProject1.Application.UntinesHelper;
 using WebApiProject1.Core;
-using static WebApiProject1.Application.System.Services.SystemService;
 
 namespace WebApiProject1.Application.Test.Services
 {
@@ -838,7 +830,7 @@ namespace WebApiProject1.Application.Test.Services
                 ? DbContext.Instance.GetConnection("PostgreSQLDB")
                 : DbContext.Instance.GetConnection("SqliteDB");
             db.Ado.GetDataTable("SELECT * from grading_record_mes");
-    
+
             return "Hello World";
         }
         /// <summary>
@@ -860,7 +852,7 @@ namespace WebApiProject1.Application.Test.Services
                                     .AS("grading_detail")
                                     .WhereIF(gradingQuery.GradingDetail.grading_position.HasValue(), x => x.grading_position == gradingQuery.GradingDetail.grading_position)
                                     .WhereIF(gradingQuery.GradingDetail.item.HasValue(), x => x.item.Contains(gradingQuery.GradingDetail.item))
-                                    .ToPageList(gradingQuery.PageNumber, gradingQuery.PageSize,ref totalCount);
+                                    .ToPageList(gradingQuery.PageNumber, gradingQuery.PageSize, ref totalCount);
 
                 resultData.PageInfo = new PageInfo
                 {
@@ -868,7 +860,7 @@ namespace WebApiProject1.Application.Test.Services
                     PageNumber = gradingQuery.PageNumber,
                     TotalCount = totalCount
                 };
-                resultData.BaseResponse = new BaseResponse { StatusCode=200};
+                resultData.BaseResponse = new BaseResponse { StatusCode = 200 };
                 resultData.Data = queryResult;
 
                 if (queryResult.Count == 0)
@@ -877,9 +869,9 @@ namespace WebApiProject1.Application.Test.Services
                 }
 
                 return resultData;
-                
-                   
-               
+
+
+
             }
             catch
             {
@@ -906,16 +898,17 @@ namespace WebApiProject1.Application.Test.Services
             {
                 Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
             }
-             var test=new Repository<grading_detail>().AsQueryable();
+            var test = new Repository<grading_detail>().AsQueryable();
             var resdtaa = test.ToList();
             // var resdtaa=   test.GetById(2);
-            resultData.BaseResponse = new BaseResponse {StatusCode=200 };
+            resultData.BaseResponse = new BaseResponse { StatusCode = 200 };
             if (resultData.Data == null)
             {
                 Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
                 return resultData;
             }
-            else {
+            else
+            {
                 resultData.PageInfo = new PageInfo
                 {
                     PageNumber = 1,
@@ -931,16 +924,16 @@ namespace WebApiProject1.Application.Test.Services
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        public  ResultData<object> InsertOrUpdateDataAsync(TestTable test)
+        public ResultData<object> InsertOrUpdateDataAsync(TestTable test)
         {
             var db = DbContext.Instance.GetConnection("SqliteDB");
             ResultData<object> resultData = new();
             object res = null;
-            var x = db.Storageable<TestTable>(new TestTable { Id = test.Id, Name = test.Name ,Age = test.Age }).As("test").ToStorage();
+            var x = db.Storageable<TestTable>(new TestTable { Id = test.Id, Name = test.Name, Age = test.Age }).As("test").ToStorage();
             res = x.AsInsertable.ExecuteCommand();
             res = x.AsUpdateable.ExecuteCommand();
 
-   
+
             return resultData;
         }
         /// <summary>
@@ -952,29 +945,29 @@ namespace WebApiProject1.Application.Test.Services
         {
             var db = DbContext.Instance.GetConnection("SqliteDB");
             ResultData<object> resultData = new();
-            int res =  db.Deleteable<TestTable>()
-                               .AS("test") 
-                               .Where(t => t.Id == id) 
+            int res = db.Deleteable<TestTable>()
+                               .AS("test")
+                               .Where(t => t.Id == id)
                                .ExecuteCommand();
-            if(res==0)
+            if (res == 0)
             {
                 Untines.SetError(resultData, EnumExtensions.MyErrorEnum.FailedToDeleteData);
                 return resultData;
             }
-                return resultData;
+            return resultData;
         }
-          List<UserInfo> UserList = new List<UserInfo>();
+        List<UserInfo> UserList = new List<UserInfo>();
         public ResultData<object> GetresultData()
         {
-            UserList.Add( new UserInfo { Id = 1, UserName = "张三", Age = 25,Sex="男", IsActive = 1 });
-            UserList.Add( new UserInfo { Id = 2, UserName = "李四", Age = 30, Sex = "男", IsActive = 1 });
-            UserList.Add( new UserInfo { Id = 3, UserName = "王五", Age = 28, Sex = "女", IsActive = 0 });
+            UserList.Add(new UserInfo { Id = 1, UserName = "张三", Age = 25, Sex = "男", IsActive = 1 });
+            UserList.Add(new UserInfo { Id = 2, UserName = "李四", Age = 30, Sex = "男", IsActive = 1 });
+            UserList.Add(new UserInfo { Id = 3, UserName = "王五", Age = 28, Sex = "女", IsActive = 0 });
 
             return new ResultData<object>
-            {  
+            {
                 BaseResponse = new BaseResponse
                 {
-                   StatusCode=200,
+                    StatusCode = 200,
                 },
                 Data = UserList.ToList()
             };
@@ -983,8 +976,8 @@ namespace WebApiProject1.Application.Test.Services
         public ResultData<object> GetResult()
         {
             var db = DbContext.Instance.GetConnection("SqliteDB");
-          var resdata=  db.SqlQueryable<object>("SELECT * FROM grading_detail").ToPageList(1,4);
-          var resdatacount=  db.SqlQueryable<object>("SELECT * FROM grading_detail").ToList().Count;
+            var resdata = db.SqlQueryable<object>("SELECT * FROM grading_detail").ToPageList(1, 4);
+            var resdatacount = db.SqlQueryable<object>("SELECT * FROM grading_detail").ToList().Count;
             PageInfo pageInfo = new PageInfo
             {
                 PageNumber = 1,    // 当前页码
@@ -997,7 +990,7 @@ namespace WebApiProject1.Application.Test.Services
             {
                 BaseResponse = new BaseResponse { StatusCode = 200 },
                 Data = resdata,
-              PageInfo= pageInfo
+                PageInfo = pageInfo
             };
         }
     }

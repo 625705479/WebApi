@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics.Distributions;
-using System.Data;
+﻿using System.Data;
 using WebApiProject1.Application.System.Services;
 using WebApiProject1.Application.Test;
 using WebApiProject1.Application.UntinesHelper;
@@ -65,7 +64,7 @@ namespace WebApiProject1.Application.System
             string[] yy = new string[] { KeyValue };
             List<string> ints = db.Queryable<grading_detail>().AS("grading_detail").Select(s => s.grading_position).ToList();
             DataTable list = db.Queryable<grading_detail>().AS("grading_detail").Select(it => new { id = it.id, name = it.grading_position }).ToDataTable();//2个字段 
-            var res = db.Utilities.DataTableToList<  grading_detail>(list);
+            var res = db.Utilities.DataTableToList<grading_detail>(list);
             var result = _systemService.UpdateOrAddEntryData(EntryDataName, xx, yy, WhereValue);
             var item = new TestEntity() { Name = "测试数据", Age = 13 };
             var x = db.Storageable(item).ToStorage();

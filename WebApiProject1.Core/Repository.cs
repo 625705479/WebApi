@@ -1,9 +1,4 @@
 ﻿using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WebApiProject1.Core
 {
@@ -17,4 +12,4 @@ namespace WebApiProject1.Core
             base.Context = db;
         }
     }
-    }
+}

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using WebApiProject1.Application.Test.Dtos;
+﻿using WebApiProject1.Application.Test.Dtos;
 using WebApiProject1.Application.Test.Services;
 using WebApiProject1.Application.UntinesHelper;
 
@@ -19,16 +17,16 @@ namespace WebApiProject1.Application.Test
         {
             _testService = testService;
         }
-    /// <summary>
-    /// 获取挡位信息
-    /// </summary>
-    /// <param name="grading_position">挡位名称</param>
-    /// <param name="item">料号</param>
-    /// <param name="Pagenumber">当前页码</param>
-    /// <param name="PageSize">查询记录条数</param>
-    /// <returns></returns>
+        /// <summary>
+        /// 获取挡位信息
+        /// </summary>
+        /// <param name="grading_position">挡位名称</param>
+        /// <param name="item">料号</param>
+        /// <param name="Pagenumber">当前页码</param>
+        /// <param name="PageSize">查询记录条数</param>
+        /// <returns></returns>
         [HttpPost("GetGradingDetailAll")] // 显式指定路由为 GetGradingDetailAll
-        public ResultData<object> GetGradingDetailAll(string grading_position, string item, int Pagenumber=1,int PageSize=20)
+        public ResultData<object> GetGradingDetailAll(string grading_position, string item, int Pagenumber = 1, int PageSize = 20)
         {
             var gradingQuery = new GradingQueryDetail
             {
@@ -83,9 +81,9 @@ namespace WebApiProject1.Application.Test
         /// <param name="age"></param>
         /// <returns></returns>
         [HttpGet("InsertDataAsync")]
-        public ResultData<object> InsertOrUpdateDataAsync(int id,string name,int age)
+        public ResultData<object> InsertOrUpdateDataAsync(int id, string name, int age)
         {
-            TestTable  testTable = new TestTable
+            TestTable testTable = new TestTable
             {
                 Id = id,
                 Name = name,
@@ -102,7 +100,7 @@ namespace WebApiProject1.Application.Test
         [HttpDelete("DeleteDataAsync")]
         public ResultData<object> DeleteDataAsync(int id)
         {
-    
+
             var result = _testService.DeleteDataAsync(id);
             return result;
         }
@@ -116,7 +114,7 @@ namespace WebApiProject1.Application.Test
         public ResultData<object> Getresult()
         {
             var result = _testService.GetResult();
-   
+
             return result;
         }
     }

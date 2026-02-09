@@ -71,18 +71,18 @@ namespace WebApiProject1.Web.Core
         /// /// <param name="totalCount"></param>
         /// /// <returns></returns>
         /// <returns></returns>
-        private static ResultData<object> YourRESTfulResult(int statusCode, object data = default, object ChineseError = default, object EnglishError = default,object Message=default,int pagenumber=default,int pageSize=default,int totalCount = default)
+        private static ResultData<object> YourRESTfulResult(int statusCode, object data = default, object ChineseError = default, object EnglishError = default, object Message = default, int pagenumber = default, int pageSize = default, int totalCount = default)
         {
             return new ResultData<object>
             {
-              BaseResponse = new BaseResponse
-              {
-                  StatusCode = statusCode,
-                  ChineseError = (string)ChineseError,
-                  EnglishError = (string)EnglishError,
-                  Message = (string)Message,
-                  Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-              },
+                BaseResponse = new BaseResponse
+                {
+                    StatusCode = statusCode,
+                    ChineseError = (string)ChineseError,
+                    EnglishError = (string)EnglishError,
+                    Message = (string)Message,
+                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                },
                 // 直接嵌套赋值 PageInfo（无需单独实例化 PageInfo）
                 PageInfo = new PageInfo
                 {
