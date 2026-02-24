@@ -26,6 +26,7 @@ namespace WebApiProject1.Application.Test
         /// <param name="PageSize">查询记录条数</param>
         /// <returns></returns>
         [HttpPost("GetGradingDetailAll")] // 显式指定路由为 GetGradingDetailAll
+        [HttpGet("GetGradingDetailAll")] 
         public ResultData<object> GetGradingDetailAll(string grading_position, string item, int Pagenumber = 1, int PageSize = 20)
         {
             var gradingQuery = new GradingQueryDetail
@@ -53,7 +54,7 @@ namespace WebApiProject1.Application.Test
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetString")]
-        public string GetString()
+        public ResultData<object> GetString()
         {
             return _testService.GetString();
         }
@@ -117,5 +118,35 @@ namespace WebApiProject1.Application.Test
 
             return result;
         }
-    }
+        /// <summary>
+        /// 获取定时任务
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("StartJob")]
+        public Task< ResultData<object>> StartJob()
+        {
+            var result = _testService.StartJob();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 停止定时任务
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("StopJob")]
+        public Task<ResultData<object>> StopJob()
+        {
+            var result = _testService.StopJob();
+
+            return result;
+        }
+
+        public ResultData<object> GetDoubleIntimacy(string fristname, string secondname)
+        {
+            var result = _testService.GetDoubleIntimacy(fristname,secondname);
+
+            return result;
+        }
+        }
 }

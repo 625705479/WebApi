@@ -2,6 +2,9 @@
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Impl.Matchers;
 using StackExchange.Profiling.Internal;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -824,14 +827,15 @@ namespace WebApiProject1.Application.Test.Services
             }
         }
 
-        public string GetString()
+        public ResultData<object> GetString()
         {
             var db = AppContext.TryGetSwitch("PostgreSQLDB", out bool isEnabled) && isEnabled
                 ? DbContext.Instance.GetConnection("PostgreSQLDB")
                 : DbContext.Instance.GetConnection("SqliteDB");
             db.Ado.GetDataTable("SELECT * from grading_record_mes");
-
-            return "Hello World";
+            ResultData<object> resultData= new ResultData<object>();
+            resultData.Data = "Hello World";
+            return resultData;
         }
         /// <summary>
         /// 获取所有挡位信息
@@ -928,11 +932,31 @@ namespace WebApiProject1.Application.Test.Services
         {
             var db = DbContext.Instance.GetConnection("SqliteDB");
             ResultData<object> resultData = new();
-            object res = null;
             var x = db.Storageable<TestTable>(new TestTable { Id = test.Id, Name = test.Name, Age = test.Age }).As("test").ToStorage();
-            res = x.AsInsertable.ExecuteCommand();
-            res = x.AsUpdateable.ExecuteCommand();
+            int res = x.AsInsertable.ExecuteCommand();
+            if (res > 0)
+            {
+                var baseapi = new BaseResponse()
+                {
+                    StatusCode = 200,
+                    ChineseError = "添加成功",
+                    EnglishError = "Add successful"
 
+                };
+                resultData.BaseResponse = baseapi;
+            }
+            int res1 = x.AsUpdateable.ExecuteCommand();
+            if (res1 > 0)
+            {
+                var baseapi = new BaseResponse()
+                {
+                    StatusCode = 200,
+                    ChineseError = "修改成功",
+                    EnglishError = "Update successful"
+
+                };
+                resultData.BaseResponse = baseapi;
+            }
 
             return resultData;
         }
@@ -969,12 +993,22 @@ namespace WebApiProject1.Application.Test.Services
                 {
                     StatusCode = 200,
                 },
-                Data = UserList.ToList()
+                Data = UserList.ToList(),
+                PageInfo = new PageInfo
+                {
+                    PageNumber = 1,
+                    PageSize = UserList.Count,
+                    TotalCount = UserList.Count
+                }
+                //PageInfo = new PageInfo 创建分页对象
+
             };
+
         }
 
         public ResultData<object> GetResult()
         {
+
             var db = DbContext.Instance.GetConnection("SqliteDB");
             var resdata = db.SqlQueryable<object>("SELECT * FROM grading_detail").ToPageList(1, 4);
             var resdatacount = db.SqlQueryable<object>("SELECT * FROM grading_detail").ToList().Count;
@@ -991,6 +1025,135 @@ namespace WebApiProject1.Application.Test.Services
                 BaseResponse = new BaseResponse { StatusCode = 200 },
                 Data = resdata,
                 PageInfo = pageInfo
+
+            };
+
+        }
+        private IScheduler _scheduler;
+        public async Task<ResultData<object>> StartJob()
+        {
+            ISchedulerFactory factory = new StdSchedulerFactory();
+            _scheduler = await factory.GetScheduler();
+           
+            // ========== 任务1：每60秒执行方法A ==========
+            IJobDetail jobA = JobBuilder.Create<JobFor5Seconds>()
+                .WithIdentity("jobA", "group1") // 唯一标识，避免和其他任务冲突
+                .Build();
+            //初始化调度器
+            ITrigger triggerA = TriggerBuilder.Create()
+                .WithIdentity("triggerA", "group1")
+                .StartNow()
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInSeconds(60)
+                    .RepeatForever())
+                .Build();
+            await _scheduler.ScheduleJob(jobA, triggerA);
+
+            // ========== 任务2：八点半执行方法B ==========
+            IJobDetail jobB = JobBuilder.Create<JobFor10Seconds>()
+                .WithIdentity("jobB", "group1") // 不同的唯一标识
+                .Build();
+            ITrigger triggerB = TriggerBuilder.Create()
+               .WithIdentity("triggerB", "group1")
+                    .StartNow()
+                    // Cron表达式：0秒 30分 8时 每天 每月 不限星期
+                    .WithCronSchedule("0 33 15 * * ?", x => x
+                        // 处理错过的执行（比如程序8:35启动，立刻执行一次）
+                        .WithMisfireHandlingInstructionFireAndProceed())
+                    .Build();
+            await _scheduler.ScheduleJob(jobB, triggerB);
+
+
+            // 4. 关联作业和触发器，启动调度器
+            await _scheduler.Start();
+            return new ResultData<object>
+            {
+                BaseResponse = new BaseResponse { StatusCode = 200 },
+                Data = "调度器已启动，执行任务！"
+            };
+
+        }
+
+        public async Task<ResultData<object>> StopJob()
+        {
+            try
+            {
+                ISchedulerFactory factory = new StdSchedulerFactory();
+                _scheduler = await factory.GetScheduler();
+                // 1. 先判断调度器是否存在且已启动，避免空操作或报错
+                if (_scheduler == null)
+                {
+                    return new ResultData<object>
+                    {
+                        BaseResponse = new BaseResponse { StatusCode = 400, Message = "调度器未初始化" },
+                        Data = "关闭失败：调度器对象为空"
+                    };
+                }
+
+                if (!_scheduler.IsStarted)
+                {
+                    return new ResultData<object>
+                    {
+                        BaseResponse = new BaseResponse { StatusCode = 400, Message = "调度器未启动" },
+                        Data = "关闭失败：调度器未处于运行状态"
+                    };
+                }
+
+                // 2. 可选：先暂停所有触发器（防止关闭过程中触发新任务）
+             _scheduler.PauseAll();
+
+                // 3. 核心：优雅关闭调度器
+                // 参数 true = 等待正在执行的任务完成后再关闭（推荐）
+                // 参数 false = 立即终止所有任务，强制关闭（慎用）
+                   _scheduler.Shutdown(true);
+                bool isShutdownSuccess = _scheduler.IsShutdown; // 关闭后检查状态
+                if (isShutdownSuccess==false)
+                {
+                    // 4. 关闭后置空，避免重复操作
+                    _scheduler = null;
+                    return new ResultData<object>
+                    {
+                        BaseResponse = new BaseResponse { StatusCode = 200, Message = "操作成功" },
+                        Data = "所有任务已停止，调度器已安全关闭"
+                    };
+                }
+                else
+                {
+                    return new ResultData<object>
+                    {
+                        BaseResponse = new BaseResponse { StatusCode = 500, Message = "操作失败" },
+                        Data = "调度器关闭异常，请检查日志"
+                    };
+                }
+            }
+            catch (SchedulerException ex)
+            {
+                // 捕获Quartz专属异常，便于定位问题
+                return new ResultData<object>
+                {
+                    BaseResponse = new BaseResponse { StatusCode = 500, Message = $"调度器关闭失败：{ex.Message}" },
+                    Data = null
+                };
+            }
+            catch (Exception ex)
+            {
+                // 捕获其他通用异常
+                return new ResultData<object>
+                {
+                    BaseResponse = new BaseResponse { StatusCode = 500, Message = $"系统异常：{ex.Message}" },
+                    Data = null
+                };
+            }
+        }
+
+        public ResultData<object> GetDoubleIntimacy(string fristname, string secondname)
+        {
+            NicknameMatchService _matchService= new NicknameMatchService();
+            int matchScore = _matchService.CalculateMatchScore(fristname, secondname);
+            return new ResultData<object>
+            {
+                BaseResponse = new BaseResponse { StatusCode = 200, Message = "操作成功" },
+                Data = $"匹配度得分：{matchScore}"
             };
         }
     }

@@ -344,6 +344,18 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.StartJob">
+            <summary>
+            获取定时任务
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.StopJob">
+            <summary>
+            停止定时任务
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:WebApiProject1.Application.UntinesHelper.Logger">
             <summary>
             静态日志工具类，基于Serilog实现
@@ -388,6 +400,36 @@
             <summary>
             手动刷新并关闭日志（建议在程序退出时调用）
             </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.JobFor5Seconds">
+            <summary>
+            自定义Quartz作业类（要执行的定时任务逻辑）
+            必须实现IJob接口
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.JobFor5Seconds.YourMethod">
+            <summary>
+            你自己的业务方法（每60秒执行一次）
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.JobFor10Seconds.YourMethod">
+            <summary>
+            你自己的业务方法（每5秒执行一次）
+            </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.NicknameMatchService">
+            <summary>
+            昵称匹配度计算服务
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.NicknameMatchService.CalculateMatchScore(System.String,System.String)">
+            <summary>
+            计算两个昵称的匹配度（80-100），整合版单方法实现
+            </summary>
+            <param name="nickname1">第一个昵称</param>
+            <param name="nickname2">第二个昵称</param>
+            <returns>匹配度分数（80-100）</returns>
+            <exception cref="T:System.ArgumentException">昵称为空时抛出</exception>
         </member>
         <member name="P:WebApiProject1.Application.UntinesHelper.ResultData`1.BaseResponse">
             <summary>

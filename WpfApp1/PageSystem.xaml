@@ -1,0 +1,13 @@
+﻿<Page x:Class="WpfApp1.PageSystem"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="#F7F8FA">
+    <StackPanel Margin="30">
+        <TextBlock Text="系统管理" FontSize="24" FontWeight="Bold" Margin="0 0 20 0"/>
+        <Border Background="White" CornerRadius="10" Padding="30">
+            <TextBlock FontSize="16" Foreground="#666">
+                用户管理、角色权限、菜单配置、部门管理功能区域
+            </TextBlock>
+        </Border>
+    </StackPanel>
+</Page>

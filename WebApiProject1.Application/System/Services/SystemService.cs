@@ -29,16 +29,18 @@ namespace WebApiProject1.Application.System.Services
         public ResultData<object> GetEntryData(string EntryDataName)
         {
             ResultData<object> resultData = new ResultData<object>();
+            var queryResult = SQLiteHelper.Instance.Query(EntryDataName).ToList();
             if (!string.IsNullOrEmpty(EntryDataName))
             {
-                var queryResult = SQLiteHelper.Instance.Query(EntryDataName).ToList();
-                resultData.Data = queryResult;
+            
+                resultData.Data = queryResult.Take(10);
             }
             else
             {
                 Untines.SetError(resultData, EnumExtensions.MyErrorEnum.QueryError);
             }
-
+            resultData.BaseResponse = new BaseResponse { StatusCode = 200, Message = "查询成功" };
+            resultData.PageInfo = new PageInfo { PageNumber = 1, PageSize = 10, TotalCount = queryResult.Count };
 
             return resultData;
 
@@ -47,7 +49,7 @@ namespace WebApiProject1.Application.System.Services
 
         public ResultData<object> UpdateOrAddEntryData(string EntryDataName, string[] primaryKeyName, string[] KeyValue, string WhereValue)
         {
-            ResultData<object> resultData = new ResultData<object>();
+            ResultData<object> resultData = new ();
             if (!string.IsNullOrEmpty(EntryDataName) && string.IsNullOrEmpty(WhereValue))
             {
                 string primaryKeyNames = primaryKeyName[0];
@@ -59,8 +61,15 @@ namespace WebApiProject1.Application.System.Services
 
             }
             else if (!string.IsNullOrEmpty(EntryDataName) && !string.IsNullOrEmpty(WhereValue))
+
             {
-                SQLiteHelper.Instance.ExecuteNonQuery($"UPDATE  {EntryDataName} SET('{primaryKeyName[0]}')  VALUES ('{KeyValue[0]}')");
+                string primaryKeyNames = string.Empty;
+                for (int i = 0; i < primaryKeyName.Length; i++)
+                {
+                    primaryKeyNames += $"{primaryKeyName[i]}='{KeyValue[i]}'";
+                }
+
+                SQLiteHelper.Instance.ExecuteNonQuery($"UPDATE  {EntryDataName} SET {primaryKeyName[0]}='{KeyValue[0]}' WHERE  {primaryKeyName[0]}='{WhereValue}' ");
             }
 
             return resultData;

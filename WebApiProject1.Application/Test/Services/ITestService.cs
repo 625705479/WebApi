@@ -18,7 +18,7 @@ namespace WebApiProject1.Application.Test.Services
         /// <returns>单个挡位信息</returns>
         ResultData<object> GetGradingDetailByIdAsync(int id);
 
-        string GetString();
+        ResultData<object> GetString();
 
         bool CreateOrSaveFile(string ThingxmlPath, string RemoteThingPath, string ThingTemplatespPath, string ExcelPath, string originalNumber, string RepaceNumber);
         ResultData<object> InsertOrUpdateDataAsync(TestTable test);
@@ -28,6 +28,10 @@ namespace WebApiProject1.Application.Test.Services
         ResultData<object> GetresultData();
 
         ResultData<object> GetResult();
+       Task< ResultData<object>> StartJob();
+
+        Task<ResultData<object>> StopJob();
+        ResultData<object> GetDoubleIntimacy(string fristname,string secondname);
 
     }
 
