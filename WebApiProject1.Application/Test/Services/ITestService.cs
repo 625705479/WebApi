@@ -28,6 +28,7 @@ namespace WebApiProject1.Application.Test.Services
         ResultData<object> GetresultData();
 
         ResultData<object> GetResult();
+       Task< ResultData<object>> GetJob();
 
     }
 

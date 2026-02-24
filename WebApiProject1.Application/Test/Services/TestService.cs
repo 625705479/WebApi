@@ -2,6 +2,9 @@
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Impl.Matchers;
 using StackExchange.Profiling.Internal;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -969,12 +972,22 @@ namespace WebApiProject1.Application.Test.Services
                 {
                     StatusCode = 200,
                 },
-                Data = UserList.ToList()
+                Data = UserList.ToList(),
+                PageInfo= new PageInfo
+                {
+                    PageNumber = 1,
+                    PageSize = UserList.Count,
+                    TotalCount = UserList.Count
+                }
+                //PageInfo = new PageInfo 创建分页对象
+
             };
+
         }
 
         public ResultData<object> GetResult()
         {
+           
             var db = DbContext.Instance.GetConnection("SqliteDB");
             var resdata = db.SqlQueryable<object>("SELECT * FROM grading_detail").ToPageList(1, 4);
             var resdatacount = db.SqlQueryable<object>("SELECT * FROM grading_detail").ToList().Count;
@@ -991,7 +1004,52 @@ namespace WebApiProject1.Application.Test.Services
                 BaseResponse = new BaseResponse { StatusCode = 200 },
                 Data = resdata,
                 PageInfo = pageInfo
+
             };
+
+        }
+        private IScheduler _scheduler;
+        public async Task< ResultData<object>>GetJob()
+        {
+            ISchedulerFactory factory = new StdSchedulerFactory();
+            _scheduler = await factory.GetScheduler();
+     
+            // ========== 任务1：每60秒执行方法A ==========
+            IJobDetail jobA = JobBuilder.Create<JobFor5Seconds>()
+                .WithIdentity("jobA", "group1") // 唯一标识，避免和其他任务冲突
+                .Build();
+            ITrigger triggerA = TriggerBuilder.Create()
+                .WithIdentity("triggerA", "group1")
+                .StartNow()
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInSeconds(60)
+                    .RepeatForever())
+                .Build();
+            await _scheduler.ScheduleJob(jobA, triggerA);
+
+            // ========== 任务2：八点半执行方法B ==========
+            IJobDetail jobB = JobBuilder.Create<JobFor10Seconds>()
+                .WithIdentity("jobB", "group1") // 不同的唯一标识
+                .Build();
+            ITrigger triggerB = TriggerBuilder.Create()
+               .WithIdentity("triggerB", "group1")
+                    .StartNow()
+                    // Cron表达式：0秒 30分 8时 每天 每月 不限星期
+                    .WithCronSchedule("0 33 15 * * ?", x => x
+                        // 处理错过的执行（比如程序8:35启动，立刻执行一次）
+                        .WithMisfireHandlingInstructionFireAndProceed())
+                    .Build();
+            await _scheduler.ScheduleJob(jobB, triggerB);
+
+
+            // 4. 关联作业和触发器，启动调度器
+            await _scheduler.Start();
+            return new ResultData<object>
+            {
+                BaseResponse = new BaseResponse { StatusCode = 200 },
+                Data = "调度器已启动，执行任务！"
+            };
+           
         }
     }
 

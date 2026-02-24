@@ -344,6 +344,12 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.GetJob">
+            <summary>
+            获取定时任务
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:WebApiProject1.Application.UntinesHelper.Logger">
             <summary>
             静态日志工具类，基于Serilog实现
@@ -387,6 +393,22 @@
         <member name="M:WebApiProject1.Application.UntinesHelper.Logger.CloseAndFlush">
             <summary>
             手动刷新并关闭日志（建议在程序退出时调用）
+            </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.JobFor5Seconds">
+            <summary>
+            自定义Quartz作业类（要执行的定时任务逻辑）
+            必须实现IJob接口
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.JobFor5Seconds.YourMethod">
+            <summary>
+            你自己的业务方法（每60秒执行一次）
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.JobFor10Seconds.YourMethod">
+            <summary>
+            你自己的业务方法（每5秒执行一次）
             </summary>
         </member>
         <member name="P:WebApiProject1.Application.UntinesHelper.ResultData`1.BaseResponse">

@@ -59,8 +59,15 @@ namespace WebApiProject1.Application.System.Services
 
             }
             else if (!string.IsNullOrEmpty(EntryDataName) && !string.IsNullOrEmpty(WhereValue))
+
             {
-                SQLiteHelper.Instance.ExecuteNonQuery($"UPDATE  {EntryDataName} SET('{primaryKeyName[0]}')  VALUES ('{KeyValue[0]}')");
+                string primaryKeyNames = string.Empty;
+                for (int i = 0; i < primaryKeyName.Length; i++)
+                {
+                    primaryKeyNames += $"{primaryKeyName[i]}='{KeyValue[i]}'";
+                }
+
+                SQLiteHelper.Instance.ExecuteNonQuery($"UPDATE  {EntryDataName} SET {primaryKeyName[0]}='{KeyValue[0]}' WHERE  {primaryKeyName[0]}='{WhereValue}' ");
             }
 
             return resultData;

@@ -117,5 +117,16 @@ namespace WebApiProject1.Application.Test
 
             return result;
         }
+        /// <summary>
+        /// 获取定时任务
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetJob")]
+        public Task< ResultData<object>> GetJob()
+        {
+            var result = _testService.GetJob();
+
+            return result;
+        }
     }
 }
