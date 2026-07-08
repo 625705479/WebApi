@@ -54,7 +54,7 @@ namespace WpfApp1
             await Task.Delay(1500);
 
             // 登录校验 测试账号 admin / 123456
-            if (user != "admin" || pwd != "123456")
+            if (user == "" || pwd == "")
             {
                 MessageBox.Show("用户名或密码错误", "登录失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 // 恢复按钮正常状态
@@ -84,13 +84,17 @@ namespace WpfApp1
         // 忘记密码弹窗提示
         private void TxtForgetPwd_Click(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("跳转密码找回页面", "功能提示");
+            ForgetPwdWindow Forget = new ForgetPwdWindow();
+            Forget.Show();
+            this.Close();
         }
 
         // 注册账号弹窗提示
         private void TxtRegister_Click(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("跳转用户注册页面", "功能提示");
+            RegisterWindow Register = new RegisterWindow();
+            Register.Show();
+            this.Close();
         }
 
      

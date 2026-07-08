@@ -42,15 +42,15 @@ namespace WpfApp1
             switch (tag)
             {
                 case "Work":
-                    pageName = "工作台";
+                    pageName = "🏠工作台";
                     frameMain.Navigate(new PageWork());
                     break;
                 case "System":
-                    pageName = "系统管理";
+                    pageName = "⚙️系统管理";
                     frameMain.Navigate(new PageSystem());
                     break;
                 case "Log":
-                    pageName = "日志管理";
+                    pageName = "📃日志管理";
                     frameMain.Navigate(new PageLog());
                     break;
             }
