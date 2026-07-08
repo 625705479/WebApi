@@ -28,10 +28,6 @@ namespace WebApiProject1.Application.Test.Services
         ResultData<object> GetresultData();
 
         ResultData<object> GetResult();
-       Task< ResultData<object>> StartJob();
-
-        Task<ResultData<object>> StopJob();
-        ResultData<object> GetDoubleIntimacy(string fristname,string secondname);
 
     }
 
