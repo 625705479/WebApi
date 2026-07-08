@@ -93,10 +93,7 @@ namespace WpfApp1
             MessageBox.Show("跳转用户注册页面", "功能提示");
         }
 
-        private void txtUserName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
+     
     }
 }
 

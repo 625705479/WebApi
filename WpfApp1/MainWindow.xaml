@@ -27,7 +27,7 @@
             <!-- 用户名输入框，文字垂直居中、可正常输入 -->
             <TextBlock Text="用户名" FontSize="17" Foreground="#333" Margin="0 0 0 10"/>
             <TextBox x:Name="txtUserName" Text="admin" Height="50" FontSize="16" Margin="0 0 0 24"
-                     VerticalContentAlignment="Center" TextChanged="txtUserName_TextChanged">
+                     VerticalContentAlignment="Center" >
                 <TextBox.Template>
                     <ControlTemplate TargetType="TextBox">
                         <Border BorderBrush="#C8C8C8" BorderThickness="1" CornerRadius="4">
