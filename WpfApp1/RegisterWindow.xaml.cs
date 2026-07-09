@@ -22,6 +22,7 @@ namespace WpfApp1
         {
             MainWindow login = new MainWindow();
             login.txtUserName.Text = txtUserName.Text;
+  
             login.Show();
             this.Close();
         }

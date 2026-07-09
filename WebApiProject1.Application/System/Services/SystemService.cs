@@ -5,6 +5,8 @@ namespace WebApiProject1.Application.System.Services
 {
     public class SystemService : ISystemService, ITransient
     {
+     
+
         public ResultData<object> DelEntryData(string tablename, string primaryKeyName, string KeyValue)
         {
             ResultData<object> resultData = new ResultData<object>();
@@ -26,6 +28,8 @@ namespace WebApiProject1.Application.System.Services
             return resultData;
         }
 
+
+
         public ResultData<object> GetEntryData(string EntryDataName)
         {
             ResultData<object> resultData = new ResultData<object>();
@@ -46,6 +50,7 @@ namespace WebApiProject1.Application.System.Services
 
 
         }
+
 
         public ResultData<object> UpdateOrAddEntryData(string EntryDataName, string[] primaryKeyName, string[] KeyValue, string WhereValue)
         {

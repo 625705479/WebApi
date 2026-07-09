@@ -118,6 +118,69 @@
             一个 GradingDetail 类型的对象
             </value>
         </member>
+        <member name="T:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance">
+            <summary>请假流程实例</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.InstanceId">
+            <summary>流程实例ID</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.ApplyUserId">
+            <summary>申请人ID</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.LeaveDays">
+            <summary>请假天数</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.LeaveReason">
+            <summary>请假原因</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.CurrentStatus">
+            <summary>流程当前状态</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.CurrentStatusText">
+            <summary>
+            流程状态中文文字显示
+            </summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.ManagerComment">
+            <summary>经理是否同意</summary>
+            <summary>经理审批意见</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.ManagerAuditTime">
+            <summary>经理审批时间</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.DirectorAgree">
+            <summary>总监是否同意</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.DirectorComment">
+            <summary>总监审批意见</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.DirectorAuditTime">
+            <summary>总监审批时间</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.CreateTime">
+            <summary>创建时间</summary>
+        </member>
+        <member name="T:WebApiProject1.Application.Test.Dtos.LeaveFlowStatus">
+            <summary>请假流程状态</summary>
+        </member>
+        <member name="F:WebApiProject1.Application.Test.Dtos.LeaveFlowStatus.Created">
+            <summary>已创建，等待经理审批</summary>
+        </member>
+        <member name="F:WebApiProject1.Application.Test.Dtos.LeaveFlowStatus.ManagerAuditing">
+            <summary>经理审批中</summary>
+        </member>
+        <member name="F:WebApiProject1.Application.Test.Dtos.LeaveFlowStatus.DirectorAuditing">
+            <summary>总监审批中</summary>
+        </member>
+        <member name="F:WebApiProject1.Application.Test.Dtos.LeaveFlowStatus.GeneralManagerAuditing">
+            <summary>总经理审批中</summary>
+        </member>
+        <member name="F:WebApiProject1.Application.Test.Dtos.LeaveFlowStatus.Approved">
+            <summary>审批全部通过</summary>
+        </member>
+        <member name="F:WebApiProject1.Application.Test.Dtos.LeaveFlowStatus.Rejected">
+            <summary>被拒绝（经理/总监/总经理拒绝）</summary>
+        </member>
         <member name="M:WebApiProject1.Application.Test.Services.ITestService.GetAllGradingDetailsAsync(WebApiProject1.Application.Test.Dtos.GradingQueryDetail)">
             <summary>
             获取所有挡位信息
@@ -130,6 +193,33 @@
             </summary>
             <param name="id">挡位ID</param>
             <returns>单个挡位信息</returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.StartLeaveAsync(System.String,System.Int32,System.String)">
+            <summary>发起请假申请，返回流程实例ID</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.ManagerAuditAsync(System.String,System.Boolean,System.String)">
+            <summary>经理审批</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.DirectorAuditAsync(System.String,System.Boolean,System.String)">
+            <summary>总监审批</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.GeneralManagerAuditAsync(System.String,System.Boolean,System.String)">
+            <summary>
+            总经理审批
+            </summary>
+            <param name="instanceId"></param>
+            <param name="isAgree"></param>
+            <param name="comment"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.GetFlowAsync(System.String)">
+            <summary>获取流程详情</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.GetAllFlowAsync">
+            <summary>获取全部流程列表</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.CancelFlowAsync(System.String)">
+            <summary>取消流程（仅未结束可取消）</summary>
         </member>
         <member name="T:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator">
             <summary>
@@ -290,6 +380,27 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.StartLeaveAsync(System.String,System.Int32,System.String)">
+            <summary>发起请假申请</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ManagerAuditAsync(System.String,System.Boolean,System.String)">
+            <summary>经理审批</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.DirectorAuditAsync(System.String,System.Boolean,System.String)">
+            <summary>总监审批</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.GeneralManagerAuditAsync(System.String,System.Boolean,System.String)">
+            <summary>总经理审批</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.GetFlowAsync(System.String)">
+            <summary>获取单个流程</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.GetAllFlowAsync">
+            <summary>获取全部流程列表（遍历Cache文件夹）</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.CancelFlowAsync(System.String)">
+            <summary>取消流程</summary>
+        </member>
         <member name="T:WebApiProject1.Application.Test.TestAppService">
             <summary>
             测试接口
@@ -355,6 +466,27 @@
             停止定时任务
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.StartLeave(System.String,System.Int32,System.String)">
+            <summary>发起请假申请</summary>
+            <param name="applyUserId">申请人ID</param>
+            <param name="leaveDays">请假天数</param>
+            <param name="leaveReason">请假原因</param>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.ManagerAudit(System.String,System.Boolean,System.String)">
+            <summary>经理审批</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.DirectorAudit(System.String,System.Boolean,System.String)">
+            <summary>总监审批</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.GeneralManagerAudit(System.String,System.Boolean,System.String)">
+            <summary>总经理审批</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.GetFlow(System.String)">
+            <summary>查询流程详情</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.GetAll">
+            <summary>获取全部流程列表</summary>
         </member>
         <member name="T:WebApiProject1.Application.UntinesHelper.Logger">
             <summary>
@@ -839,6 +971,17 @@
             <param name="result"></param>
             <param name="myError"></param>
             <param name="Message"></param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WebApiProject1.Application.UntinesHelper.Untines.SaveToFileCache(System.String,System.String,System.TimeSpan)" -->
+        <member name="M:WebApiProject1.Application.UntinesHelper.Untines.ReadFromFileCache(System.String)">
+            <summary>从文件缓存读取，过期返回null</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Untines.RemoveFileCache(System.String)">
+            <summary>删除文件缓存</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Untines.GetDescription(System.Enum)">
+            <summary>获取枚举的Description中文描述</summary>
+            <summary>获取LeaveFlowStatus枚举的中文Description描述</summary>
         </member>
     </members>
 </doc>

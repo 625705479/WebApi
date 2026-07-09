@@ -148,5 +148,91 @@ namespace WebApiProject1.Application.Test
 
             return result;
         }
+        /// <summary>发起请假申请</summary>
+        /// <param name="applyUserId">申请人ID</param>
+        /// <param name="leaveDays">请假天数</param>
+        /// <param name="leaveReason">请假原因</param>
+        [HttpPost("StartLeave")]
+        public async Task<ResultData<object>> StartLeave(string applyUserId, int leaveDays, string leaveReason)
+        {
+            var res = new ResultData<object>
+            {
+                // 关键：实例化 BaseResponse 对象
+                BaseResponse = new BaseResponse()
+            };
+            try
+            {
+                var instanceId = await _testService.StartLeaveAsync(applyUserId, leaveDays, leaveReason);
+                res.BaseResponse.Message = $"已发起请假，流程ID：{instanceId}请假人:{applyUserId},天数:{leaveDays},原由:{leaveReason}";
+                res.Data = new { InstanceId = instanceId };
+            }
+            catch (Exception ex)
+            {
+                res.BaseResponse.ChineseError = ex.Message;
+            }
+            return res;
         }
+        /// <summary>经理审批</summary>
+        [HttpPost("ManagerAudit")]
+        public async Task<ResultData<object>> ManagerAudit(string instanceId, bool isAgree, string comment = "")
+        {
+            var res = new ResultData<object>
+            {
+                BaseResponse = new BaseResponse()
+            };
+            var ok = await _testService.ManagerAuditAsync(instanceId, isAgree, comment);
+            res.Data = new { Success = ok };
+            res.BaseResponse.Message = ok ? "操作成功" : "操作失败，当前流程不允许经理审批";
+            return res;
+        }
+
+        /// <summary>总监审批</summary>
+        [HttpPost("DirectorAudit")]
+        public async Task<ResultData<object>> DirectorAudit(string instanceId, bool isAgree, string comment = "")
+        {
+            var res = new ResultData<object>
+            {
+                BaseResponse = new BaseResponse()
+            };
+            var ok = await _testService.DirectorAuditAsync(instanceId, isAgree, comment);
+            res.Data = new { Success = ok };
+            res.BaseResponse.Message = ok ? "操作成功" : "操作失败，必须等待经理审批完成后才可操作";
+            return res;
+        }
+
+        /// <summary>总经理审批</summary>
+        [HttpPost("GeneralManagerAudit")]
+        public async Task<ResultData<object>> GeneralManagerAudit(string instanceId, bool isAgree, string comment = "")
+        {
+            var res = new ResultData<object>
+            {
+                BaseResponse = new BaseResponse()
+            };
+            var ok = await _testService.GeneralManagerAuditAsync(instanceId, isAgree, comment);
+            res.Data = new { Success = ok };
+            res.BaseResponse.Message = ok ? "操作成功" : "操作失败，必须等待总监审批完成后才可操作";
+            return res;
+        }
+
+        /// <summary>查询流程详情</summary>
+        [HttpGet("GetFlow")]
+        public async Task<ResultData<object>> GetFlow(string instanceId)
+        {
+            var res = new ResultData<object>();
+            res.Data = await _testService.GetFlowAsync(instanceId);
+            return res;
+        }
+
+        /// <summary>获取全部流程列表</summary>
+        [HttpGet("GetAll")]
+        public async Task<ResultData<object>> GetAll()
+        {
+            var res = new ResultData<object>();
+            res.Data = await _testService.GetAllFlowAsync();
+            return res;
+        }
+    }
+
+
+
 }

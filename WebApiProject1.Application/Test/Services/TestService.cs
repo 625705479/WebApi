@@ -2,10 +2,12 @@
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using OpenTelemetry.Trace;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Matchers;
 using StackExchange.Profiling.Internal;
+using System.Collections.Concurrent;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -561,7 +563,7 @@ namespace WebApiProject1.Application.Test.Services
             return beforeThing + ".";
         }
         #endregion
-
+        private readonly TimeSpan _cacheExpire = TimeSpan.FromHours(24);
         /// <summary>
         /// 创建或者修改xml文件
         /// </summary>
@@ -1155,6 +1157,198 @@ namespace WebApiProject1.Application.Test.Services
                 BaseResponse = new BaseResponse { StatusCode = 200, Message = "操作成功" },
                 Data = $"匹配度得分：{matchScore}"
             };
+        }
+
+        /// <summary>发起请假申请</summary>
+        public async Task<string> StartLeaveAsync(string applyUserId, int leaveDays, string leaveReason)
+        {
+            await Task.CompletedTask;
+
+            if (string.IsNullOrWhiteSpace(applyUserId))
+                throw new ArgumentException("申请人Id不能为空");
+            if (leaveDays <= 0)
+                throw new ArgumentOutOfRangeException(nameof(leaveDays), "请假天数必须大于0");
+
+            string instanceId = Guid.NewGuid().ToString("N");
+
+            var flow = new LeaveFlowInstance
+            {
+                InstanceId = instanceId,
+                ApplyUserId = applyUserId,
+                LeaveDays = leaveDays,
+                LeaveReason = leaveReason ?? "",
+                CurrentStatus = LeaveFlowStatus.Created,
+                CreateTime = DateTime.Now
+            };
+
+            // 对象序列化为json存入文件缓存
+            string json = JsonConvert.SerializeObject(flow);
+            Untines.SaveToFileCache(instanceId, json, _cacheExpire);
+
+            return instanceId;
+        }
+
+        /// <summary>经理审批</summary>
+        public async Task<bool> ManagerAuditAsync(string instanceId, bool isAgree, string comment)
+        {
+            await Task.CompletedTask;
+            var json = Untines.ReadFromFileCache(instanceId);
+            if (json == null) return false;
+
+            var flow = JsonConvert.DeserializeObject<LeaveFlowInstance>(json);
+            // 只能在【Created】状态执行经理审批
+            if (flow.CurrentStatus != LeaveFlowStatus.Created)
+                return false;
+
+            flow.ManagerAuditComment = comment;
+            flow.ManagerAgree = isAgree;
+
+            TimeSpan expireTime;
+            if (!isAgree)
+            {
+                // ❗经理不同意：退回创建节点，设置20分钟自动删除
+                flow.CurrentStatus = LeaveFlowStatus.Created;
+                expireTime = TimeSpan.FromMinutes(20);
+            }
+            else
+            {
+                //经理同意 →流转到总监审批，正常保存24小时
+                flow.CurrentStatus = LeaveFlowStatus.DirectorAuditing;
+                expireTime = TimeSpan.FromHours(24);
+            }
+
+            var saveJson = JsonConvert.SerializeObject(flow);
+            Untines.SaveToFileCache(instanceId, saveJson, expireTime);
+            return true;
+        }
+
+        /// <summary>总监审批</summary>
+        public async Task<bool> DirectorAuditAsync(string instanceId, bool isAgree, string comment)
+        {
+            await Task.CompletedTask;
+            var json = Untines.ReadFromFileCache(instanceId);
+            if (json == null) return false;
+
+            var flow = JsonConvert.DeserializeObject<LeaveFlowInstance>(json);
+            // 只能在【DirectorAuditing】状态执行总监审批（经理已经同意完）
+            if (flow.CurrentStatus != LeaveFlowStatus.DirectorAuditing)
+                return false;
+
+            flow.DirectorAuditComment = comment;
+            flow.DirectorAgree = isAgree;
+
+            TimeSpan expireTime;
+            if (!isAgree)
+            {
+                // ❗总监不同意：退回创建节点，设置20分钟自动删除
+                flow.CurrentStatus = LeaveFlowStatus.Created;
+                expireTime = TimeSpan.FromMinutes(20);
+            }
+            else
+            {
+                //总监同意 →流转总经理审批，保存24小时
+                flow.CurrentStatus = LeaveFlowStatus.GeneralManagerAuditing;
+                expireTime = TimeSpan.FromHours(24);
+            }
+
+            var saveJson = JsonConvert.SerializeObject(flow);
+            Untines.SaveToFileCache(instanceId, saveJson, expireTime);
+            return true;
+        }
+
+        /// <summary>总经理审批</summary>
+        public async Task<bool> GeneralManagerAuditAsync(string instanceId, bool isAgree, string comment)
+        {
+            await Task.CompletedTask;
+            var json = Untines.ReadFromFileCache(instanceId);
+            if (json == null) return false;
+
+            var flow = JsonConvert.DeserializeObject<LeaveFlowInstance>(json);
+            //只能在【GeneralManagerAuditing】状态执行总经理审批（总监已经同意完）
+            if (flow.CurrentStatus != LeaveFlowStatus.GeneralManagerAuditing)
+                return false;
+
+            flow.GeneralManagerAuditComment = comment;
+            flow.GeneralManagerAgree = isAgree;
+
+            TimeSpan expireTime;
+            if (!isAgree)
+            {
+                // ❗总经理不同意：退回创建节点，设置20分钟自动删除
+                flow.CurrentStatus = LeaveFlowStatus.Created;
+                expireTime = TimeSpan.FromMinutes(20);
+            }
+            else
+            {
+                //✅总经理审批全部通过：设置20分钟到期自动删除
+                flow.CurrentStatus = LeaveFlowStatus.Approved;
+                expireTime = TimeSpan.FromMinutes(20);
+            }
+
+            var saveJson = JsonConvert.SerializeObject(flow);
+            Untines.SaveToFileCache(instanceId, saveJson, expireTime);
+            return true;
+        }
+
+        /// <summary>获取单个流程</summary>
+        public async Task<LeaveFlowInstance?> GetFlowAsync(string instanceId)
+        {
+            await Task.CompletedTask;
+            var json = Untines.ReadFromFileCache(instanceId);
+            if (json == null) return null;
+
+            var flow = JsonConvert.DeserializeObject<LeaveFlowInstance>(json);
+            if (flow != null)
+            {
+                // 重点：打印当前节点，确认字段是否成功反序列化
+                Console.WriteLine($"[调试]当前流程节点：{flow.CurrentStatus}");
+                string text = flow.CurrentStatus.GetDescription();
+            
+                flow.CurrentStatusText = text;
+            }
+            return flow;
+           
+        }
+
+        /// <summary>获取全部流程列表（遍历Cache文件夹）</summary>
+        public async Task<List<LeaveFlowInstance>> GetAllFlowAsync()
+        {
+            await Task.CompletedTask;
+            var list = new List<LeaveFlowInstance>();
+            var cacheDir = Path.Combine(AppContext.BaseDirectory, "Cache");
+            if (!Directory.Exists(cacheDir)) return list;
+
+            var files = Directory.GetFiles(cacheDir);
+            foreach (var file in files)
+            {
+                var key = Path.GetFileName(file);
+                var json = Untines.ReadFromFileCache(key);
+                if (string.IsNullOrEmpty(json)) continue;
+                var item = JsonConvert.DeserializeObject<LeaveFlowInstance>(json);
+                if (item != null) list.Add(item);
+            }
+            return list;
+        }
+
+        /// <summary>取消流程</summary>
+        public async Task<bool> CancelFlowAsync(string instanceId)
+        {
+            await Task.CompletedTask;
+            var json = Untines.ReadFromFileCache(instanceId);
+            if (json == null) return false;
+
+            var flow = JsonConvert.DeserializeObject<LeaveFlowInstance>(json);
+            if (flow == null) return false;
+
+            if (flow.CurrentStatus is LeaveFlowStatus.Approved or LeaveFlowStatus.Rejected)
+                return false;
+
+            flow.CurrentStatus = LeaveFlowStatus.Rejected;
+            flow.ManagerComment = "申请人主动取消申请";
+
+            string newJson = JsonConvert.SerializeObject(flow);
+           Untines.SaveToFileCache(instanceId, newJson, _cacheExpire);
+            return true;
         }
     }
 

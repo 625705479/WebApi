@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Reflection;
+using System.Text;
+using WebApiProject1.Application.Test.Dtos;
 
 namespace WebApiProject1.Application.UntinesHelper
 {
@@ -58,6 +61,85 @@ namespace WebApiProject1.Application.UntinesHelper
             result.BaseResponse = baseResponse;
             Logger.Error("接口异常:" + baseResponse.StatusCode + baseResponse.Message + baseResponse.ChineseError + baseResponse.EnglishError);
 
+        }
+
+
+// <summary>
+/// 保存数据到文件缓存中
+/// </summary>
+/// <param name="key">缓存键</param>
+/// <param name="value">缓存值</param>
+/// <param name="timeSpan">缓存有效期</param>
+public static void SaveToFileCache(string key, string value, TimeSpan timeSpan)
+    {
+        var cacheDir = Path.Combine(AppContext.BaseDirectory, "Cache");
+        Directory.CreateDirectory(cacheDir);
+
+        var filePath = Path.Combine(cacheDir, key);
+        var content = $"{value}|{DateTime.Now.Add(timeSpan):o}"; // 包含过期时间
+
+        File.WriteAllText(filePath, content);
+    }
+
+    /// <summary>从文件缓存读取，过期返回null</summary>
+    public static string? ReadFromFileCache(string key)
+    {
+        var cacheDir = Path.Combine(AppContext.BaseDirectory, "Cache");
+        var filePath = Path.Combine(cacheDir, key);
+        if (!File.Exists(filePath)) return null;
+
+        var text = File.ReadAllText(filePath);
+        var parts = text.Split(new[] { '|' }, 2);
+        if (parts.Length != 2)
+        {
+            File.Delete(filePath);
+            return null;
+        }
+
+        var value = parts[0];
+        if (!DateTime.TryParse(parts[1], out var expireTime))
+        {
+            File.Delete(filePath);
+            return null;
+        }
+
+        // 判断是否过期
+        if (DateTime.Now > expireTime)
+        {
+            File.Delete(filePath);
+            return null;
+        }
+        return value;
+    }
+
+    /// <summary>删除文件缓存</summary>
+    public static void RemoveFileCache(string key)
+    {
+        var cacheDir = Path.Combine(AppContext.BaseDirectory, "Cache");
+        var filePath = Path.Combine(cacheDir, key);
+        if (File.Exists(filePath))
+            File.Delete(filePath);
+    }
+
+        public static T GetEnumByDescription<T>(string description) where T : Enum
+        {
+            foreach (var field in typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static))
+            {
+                var desc = field.GetCustomAttribute<DescriptionAttribute>();
+                if (desc != null && desc.Description == description)
+                {
+                    return (T)field.GetValue(null);
+                }
+            }
+            return default;
+        }
+        /// <summary>获取枚举的Description中文描述</summary>
+        /// <summary>获取LeaveFlowStatus枚举的中文Description描述</summary>
+        public static string GetDescription(this Enum enumValue)
+        {
+            FieldInfo field = enumValue.GetType().GetField(enumValue.ToString());
+            DescriptionAttribute attr = field.GetCustomAttribute<DescriptionAttribute>();
+            return attr != null ? attr.Description : enumValue.ToString();
         }
     }
 }
