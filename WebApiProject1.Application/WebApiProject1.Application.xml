@@ -160,6 +160,39 @@
         <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.CreateTime">
             <summary>创建时间</summary>
         </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowInstance.OperationRecords">
+            <summary>流程全部操作记录</summary>
+        </member>
+        <member name="T:WebApiProject1.Application.Test.Dtos.LeaveFlowOperationRecord">
+            <summary>请假单操作记录</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowOperationRecord.RecordId">
+            <summary>记录ID</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowOperationRecord.InstanceId">
+            <summary>关联流程InstanceId</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowOperationRecord.OperationType">
+            <summary>操作类型：发起申请/经理审批/总监审批/总经理审批</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowOperationRecord.OperatorUserId">
+            <summary>操作人ID</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowOperationRecord.OperateTime">
+            <summary>操作时间</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowOperationRecord.Comment">
+            <summary>审批意见/备注</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowOperationRecord.IsAgree">
+            <summary>审批是否同意，null=发起申请</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowOperationRecord.BeforeStatusText">
+            <summary>操作前状态中文</summary>
+        </member>
+        <member name="P:WebApiProject1.Application.Test.Dtos.LeaveFlowOperationRecord.AfterStatusText">
+            <summary>操作后状态中文</summary>
+        </member>
         <member name="T:WebApiProject1.Application.Test.Dtos.LeaveFlowStatus">
             <summary>请假流程状态</summary>
         </member>
@@ -197,20 +230,16 @@
         <member name="M:WebApiProject1.Application.Test.Services.ITestService.StartLeaveAsync(System.String,System.Int32,System.String)">
             <summary>发起请假申请，返回流程实例ID</summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.Services.ITestService.ManagerAuditAsync(System.String,System.Boolean,System.String)">
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.ManagerAuditAsync(System.String,System.String,System.Boolean,System.String)">
             <summary>经理审批</summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.Services.ITestService.DirectorAuditAsync(System.String,System.Boolean,System.String)">
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.DirectorAuditAsync(System.String,System.String,System.Boolean,System.String)">
             <summary>总监审批</summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.Services.ITestService.GeneralManagerAuditAsync(System.String,System.Boolean,System.String)">
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.GeneralManagerAuditAsync(System.String,System.String,System.Boolean,System.String)">
             <summary>
             总经理审批
             </summary>
-            <param name="instanceId"></param>
-            <param name="isAgree"></param>
-            <param name="comment"></param>
-            <returns></returns>
         </member>
         <member name="M:WebApiProject1.Application.Test.Services.ITestService.GetFlowAsync(System.String)">
             <summary>获取流程详情</summary>
@@ -218,7 +247,7 @@
         <member name="M:WebApiProject1.Application.Test.Services.ITestService.GetAllFlowAsync">
             <summary>获取全部流程列表</summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.Services.ITestService.CancelFlowAsync(System.String)">
+        <member name="M:WebApiProject1.Application.Test.Services.ITestService.CancelFlowAsync(System.String,System.String)">
             <summary>取消流程（仅未结束可取消）</summary>
         </member>
         <member name="T:WebApiProject1.Application.Test.Services.TestService.ExcelToXmlGenerator">
@@ -383,13 +412,13 @@
         <member name="M:WebApiProject1.Application.Test.Services.TestService.StartLeaveAsync(System.String,System.Int32,System.String)">
             <summary>发起请假申请</summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.Services.TestService.ManagerAuditAsync(System.String,System.Boolean,System.String)">
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.ManagerAuditAsync(System.String,System.String,System.Boolean,System.String)">
             <summary>经理审批</summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.Services.TestService.DirectorAuditAsync(System.String,System.Boolean,System.String)">
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.DirectorAuditAsync(System.String,System.String,System.Boolean,System.String)">
             <summary>总监审批</summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.Services.TestService.GeneralManagerAuditAsync(System.String,System.Boolean,System.String)">
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.GeneralManagerAuditAsync(System.String,System.String,System.Boolean,System.String)">
             <summary>总经理审批</summary>
         </member>
         <member name="M:WebApiProject1.Application.Test.Services.TestService.GetFlowAsync(System.String)">
@@ -398,7 +427,7 @@
         <member name="M:WebApiProject1.Application.Test.Services.TestService.GetAllFlowAsync">
             <summary>获取全部流程列表（遍历Cache文件夹）</summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.Services.TestService.CancelFlowAsync(System.String)">
+        <member name="M:WebApiProject1.Application.Test.Services.TestService.CancelFlowAsync(System.String,System.String)">
             <summary>取消流程</summary>
         </member>
         <member name="T:WebApiProject1.Application.Test.TestAppService">
@@ -473,17 +502,20 @@
             <param name="leaveDays">请假天数</param>
             <param name="leaveReason">请假原因</param>
         </member>
-        <member name="M:WebApiProject1.Application.Test.TestAppService.ManagerAudit(System.String,System.Boolean,System.String)">
+        <member name="M:WebApiProject1.Application.Test.TestAppService.ManagerAudit(System.String,System.String,System.Boolean,System.String)">
             <summary>经理审批</summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.TestAppService.DirectorAudit(System.String,System.Boolean,System.String)">
+        <member name="M:WebApiProject1.Application.Test.TestAppService.DirectorAudit(System.String,System.String,System.Boolean,System.String)">
             <summary>总监审批</summary>
         </member>
-        <member name="M:WebApiProject1.Application.Test.TestAppService.GeneralManagerAudit(System.String,System.Boolean,System.String)">
+        <member name="M:WebApiProject1.Application.Test.TestAppService.GeneralManagerAudit(System.String,System.String,System.Boolean,System.String)">
             <summary>总经理审批</summary>
         </member>
         <member name="M:WebApiProject1.Application.Test.TestAppService.GetFlow(System.String)">
             <summary>查询流程详情</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.Test.TestAppService.CancelFlow(System.String,System.String)">
+            <summary>取消流程</summary>
         </member>
         <member name="M:WebApiProject1.Application.Test.TestAppService.GetAll">
             <summary>获取全部流程列表</summary>

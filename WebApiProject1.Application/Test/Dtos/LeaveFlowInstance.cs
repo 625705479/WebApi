@@ -54,8 +54,34 @@ namespace WebApiProject1.Application.Test.Dtos
 
         /// <summary>创建时间</summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>流程全部操作记录</summary>
+        public List<LeaveFlowOperationRecord> OperationRecords { get; set; } = new List<LeaveFlowOperationRecord>();
     }
 
+
+    /// <summary>请假单操作记录</summary>
+    public class LeaveFlowOperationRecord
+    {
+        /// <summary>记录ID</summary>
+        public string RecordId { get; set; }
+        /// <summary>关联流程InstanceId</summary>
+        public string InstanceId { get; set; }
+        /// <summary>操作类型：发起申请/经理审批/总监审批/总经理审批</summary>
+        public string OperationType { get; set; }
+        /// <summary>操作人ID</summary>
+        public string OperatorUserId { get; set; }
+        /// <summary>操作时间</summary>
+        public DateTime OperateTime { get; set; }
+        /// <summary>审批意见/备注</summary>
+        public string Comment { get; set; }
+        /// <summary>审批是否同意，null=发起申请</summary>
+        public bool? IsAgree { get; set; }
+        /// <summary>操作前状态中文</summary>
+        public string BeforeStatusText { get; set; }
+        /// <summary>操作后状态中文</summary>
+        public string AfterStatusText { get; set; }
+    }
 
     /// <summary>请假流程状态</summary>
     public enum LeaveFlowStatus

@@ -112,8 +112,62 @@ public static void SaveToFileCache(string key, string value, TimeSpan timeSpan)
         return value;
     }
 
-    /// <summary>删除文件缓存</summary>
-    public static void RemoveFileCache(string key)
+        private static readonly TimeSpan _scanPeriod = TimeSpan.FromMinutes(3);
+
+        public static  async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                try
+                {
+                    var cacheDir = Path.Combine(AppContext.BaseDirectory, "Cache");
+                    if (Directory.Exists(cacheDir))
+                    {
+                        var files = Directory.GetFiles(cacheDir);
+                        foreach (var filePath in files)
+                        {
+                            try
+                            {
+                                string content = await File.ReadAllTextAsync(filePath, stoppingToken);
+                                int splitIndex = content.LastIndexOf('|');
+                                if (splitIndex <= 0)
+                                {
+                                    File.Delete(filePath);
+                                    continue;
+                                }
+
+                                string expireText = content.Substring(splitIndex + 1);
+                                if (DateTime.TryParse(expireText, out DateTime expireTime))
+                                {
+                                    if (DateTime.Now > expireTime)
+                                    {
+                                        // 已经过期，物理删除磁盘文件
+                                        File.Delete(filePath);
+                                    }
+                                }
+                                else
+                                {
+                                    // 时间格式损坏，直接删除垃圾文件
+                                    File.Delete(filePath);
+                                }
+                            }
+                            catch (IOException)
+                            {
+                                // 文件被别的进程占用，跳过本次，下一轮扫描再处理
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // 扫描异常不崩溃主程序，吞掉异常
+                }
+
+                await Task.Delay(_scanPeriod, stoppingToken);
+            }
+        }
+        /// <summary>删除文件缓存</summary>
+        public static void RemoveFileCache(string key)
     {
         var cacheDir = Path.Combine(AppContext.BaseDirectory, "Cache");
         var filePath = Path.Combine(cacheDir, key);

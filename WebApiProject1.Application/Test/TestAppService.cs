@@ -174,13 +174,13 @@ namespace WebApiProject1.Application.Test
         }
         /// <summary>经理审批</summary>
         [HttpPost("ManagerAudit")]
-        public async Task<ResultData<object>> ManagerAudit(string instanceId, bool isAgree, string comment = "")
+        public async Task<ResultData<object>> ManagerAudit(string ApplyUserId, string instanceId, bool isAgree, string comment = "")
         {
             var res = new ResultData<object>
             {
                 BaseResponse = new BaseResponse()
             };
-            var ok = await _testService.ManagerAuditAsync(instanceId, isAgree, comment);
+            var ok = await _testService.ManagerAuditAsync(ApplyUserId, instanceId, isAgree, comment);
             res.Data = new { Success = ok };
             res.BaseResponse.Message = ok ? "操作成功" : "操作失败，当前流程不允许经理审批";
             return res;
@@ -188,13 +188,13 @@ namespace WebApiProject1.Application.Test
 
         /// <summary>总监审批</summary>
         [HttpPost("DirectorAudit")]
-        public async Task<ResultData<object>> DirectorAudit(string instanceId, bool isAgree, string comment = "")
+        public async Task<ResultData<object>> DirectorAudit(string ApplyUserId, string instanceId, bool isAgree, string comment = "")
         {
             var res = new ResultData<object>
             {
                 BaseResponse = new BaseResponse()
             };
-            var ok = await _testService.DirectorAuditAsync(instanceId, isAgree, comment);
+            var ok = await _testService.DirectorAuditAsync(ApplyUserId, instanceId, isAgree, comment);
             res.Data = new { Success = ok };
             res.BaseResponse.Message = ok ? "操作成功" : "操作失败，必须等待经理审批完成后才可操作";
             return res;
@@ -202,13 +202,13 @@ namespace WebApiProject1.Application.Test
 
         /// <summary>总经理审批</summary>
         [HttpPost("GeneralManagerAudit")]
-        public async Task<ResultData<object>> GeneralManagerAudit(string instanceId, bool isAgree, string comment = "")
+        public async Task<ResultData<object>> GeneralManagerAudit(string ApplyUserId, string instanceId, bool isAgree, string comment = "")
         {
             var res = new ResultData<object>
             {
                 BaseResponse = new BaseResponse()
             };
-            var ok = await _testService.GeneralManagerAuditAsync(instanceId, isAgree, comment);
+            var ok = await _testService.GeneralManagerAuditAsync(ApplyUserId, instanceId, isAgree, comment);
             res.Data = new { Success = ok };
             res.BaseResponse.Message = ok ? "操作成功" : "操作失败，必须等待总监审批完成后才可操作";
             return res;
@@ -222,7 +222,19 @@ namespace WebApiProject1.Application.Test
             res.Data = await _testService.GetFlowAsync(instanceId);
             return res;
         }
-
+        /// <summary>取消流程</summary>
+        [HttpGet("CancelFlow")]
+        public async Task<ResultData<object>> CancelFlow(string ApplyUserId, string instanceId)
+        {
+            var res = new ResultData<object>
+            {
+                // 关键：实例化 BaseResponse 对象
+                BaseResponse = new BaseResponse()
+            };
+            res.BaseResponse.Message = $"流程ID：{instanceId}已经被取消，请重新申请";
+            res.Data = await _testService.CancelFlowAsync(ApplyUserId,instanceId);
+            return res;
+        }
         /// <summary>获取全部流程列表</summary>
         [HttpGet("GetAll")]
         public async Task<ResultData<object>> GetAll()
