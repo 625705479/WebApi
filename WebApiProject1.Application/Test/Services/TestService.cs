@@ -1165,9 +1165,9 @@ namespace WebApiProject1.Application.Test.Services
             await Task.CompletedTask;
 
             if (string.IsNullOrWhiteSpace(applyUserId))
-                throw new ArgumentException("申请人Id不能为空");
+                throw new ArgumentException(EnumExtensions.MyErrorEnum.LeaveDaysMustGreaterZero.GetChinese() + "/" + EnumExtensions.MyErrorEnum.LeaveDaysMustGreaterZero.GetEnglish());
             if (leaveDays <= 0)
-                throw new ArgumentOutOfRangeException(nameof(leaveDays), "请假天数必须大于0");
+                throw new ArgumentException(EnumExtensions.MyErrorEnum.InstanceAlreadyCancelled.GetChinese() + "/" + EnumExtensions.MyErrorEnum.InstanceAlreadyCancelled.GetEnglish());
 
             string instanceId = Guid.NewGuid().ToString("N");
 
@@ -1339,7 +1339,7 @@ namespace WebApiProject1.Application.Test.Services
                 flow.DirectorAuditComment = null;
                 flow.GeneralManagerAgree = null;
                 flow.GeneralManagerAuditComment = null;
-
+                //添加审批记录测试记录，
                 expireTime = TimeSpan.FromMinutes(20);
             }
             else
@@ -1421,7 +1421,7 @@ namespace WebApiProject1.Application.Test.Services
 
             if (flow.CurrentStatus is LeaveFlowStatus.Approved or LeaveFlowStatus.Rejected)
                 return false;
-            TimeSpan expireTime = TimeSpan.FromMinutes(2);
+            TimeSpan expireTime = TimeSpan.FromMinutes(20);
   
             flow.CurrentStatus = LeaveFlowStatus.Rejected;
             flow.ManagerComment = "申请人主动取消申请/或者审批被拒绝";

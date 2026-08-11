@@ -520,6 +520,46 @@
         <member name="M:WebApiProject1.Application.Test.TestAppService.GetAll">
             <summary>获取全部流程列表</summary>
         </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.EnumExtensions">
+            <summary>
+            错误枚举统一管理类（包含特性、枚举、扩展方法）
+            </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.EnumExtensions.EnumErrorInfoAttribute">
+            <summary>
+            枚举绑定中英文错误描述特性
+            </summary>
+        </member>
+        <member name="T:WebApiProject1.Application.UntinesHelper.EnumExtensions.MyErrorEnum">
+            <summary>
+            统一业务错误类型枚举
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.EnumExtensions.GetChinese(WebApiProject1.Application.UntinesHelper.EnumExtensions.MyErrorEnum)">
+            <summary>
+            获取纯中文提示（无格式化）
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.EnumExtensions.GetChinese(WebApiProject1.Application.UntinesHelper.EnumExtensions.MyErrorEnum,System.Object[])">
+            <summary>
+            获取格式化中文提示，支持{0}占位符
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.EnumExtensions.GetEnglish(WebApiProject1.Application.UntinesHelper.EnumExtensions.MyErrorEnum)">
+            <summary>
+            获取纯英文提示（无格式化）
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.EnumExtensions.GetEnglish(WebApiProject1.Application.UntinesHelper.EnumExtensions.MyErrorEnum,System.Object[])">
+            <summary>
+            获取格式化英文提示，支持{0}占位符
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.EnumExtensions.GetAttr(WebApiProject1.Application.UntinesHelper.EnumExtensions.MyErrorEnum)">
+            <summary>
+            内部反射获取特性
+            </summary>
+        </member>
         <member name="T:WebApiProject1.Application.UntinesHelper.Logger">
             <summary>
             静态日志工具类，基于Serilog实现
@@ -1014,6 +1054,21 @@
         <member name="M:WebApiProject1.Application.UntinesHelper.Untines.GetDescription(System.Enum)">
             <summary>获取枚举的Description中文描述</summary>
             <summary>获取LeaveFlowStatus枚举的中文Description描述</summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Untines.GetZh(System.String)">
+            <summary>
+            获取中文
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Untines.GetEn(System.String)">
+            <summary>
+            获取英文
+            </summary>
+        </member>
+        <member name="M:WebApiProject1.Application.UntinesHelper.Untines.GetMsg(System.String,System.Boolean)">
+            <summary>
+            自动切换语言
+            </summary>
         </member>
     </members>
 </doc>

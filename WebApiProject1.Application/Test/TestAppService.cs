@@ -1,4 +1,5 @@
-﻿using WebApiProject1.Application.Test.Dtos;
+﻿using SqlSugar.Extensions;
+using WebApiProject1.Application.Test.Dtos;
 using WebApiProject1.Application.Test.Services;
 using WebApiProject1.Application.UntinesHelper;
 
@@ -168,7 +169,8 @@ namespace WebApiProject1.Application.Test
             }
             catch (Exception ex)
             {
-                res.BaseResponse.ChineseError = ex.Message;
+                res.BaseResponse.ChineseError =Untines.GetZh( ex.Message);
+                res.BaseResponse.EnglishError =Untines.GetEn( ex.Message);
             }
             return res;
         }
@@ -231,8 +233,17 @@ namespace WebApiProject1.Application.Test
                 // 关键：实例化 BaseResponse 对象
                 BaseResponse = new BaseResponse()
             };
-            res.BaseResponse.Message = $"流程ID：{instanceId}已经被取消，请重新申请";
+         
             res.Data = await _testService.CancelFlowAsync(ApplyUserId,instanceId);
+            if (res.Data.ObjToBool()!=false)
+            {
+                res.BaseResponse.Message = $"流程ID：{instanceId}已经被取消，请重新申请";
+            }
+            else
+            {
+                res.BaseResponse.ChineseError = EnumExtensions.MyErrorEnum.InstanceAlreadyCancelled.GetChinese(instanceId);
+                res.BaseResponse.EnglishError = EnumExtensions.MyErrorEnum.InstanceAlreadyCancelled.GetEnglish(instanceId);
+            }
             return res;
         }
         /// <summary>获取全部流程列表</summary>
@@ -243,6 +254,9 @@ namespace WebApiProject1.Application.Test
             res.Data = await _testService.GetAllFlowAsync();
             return res;
         }
+
+
+
     }
 
 

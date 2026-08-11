@@ -195,5 +195,35 @@ public static void SaveToFileCache(string key, string value, TimeSpan timeSpan)
             DescriptionAttribute attr = field.GetCustomAttribute<DescriptionAttribute>();
             return attr != null ? attr.Description : enumValue.ToString();
         }
+
+        /// <summary>
+        /// 获取中文
+        /// </summary>
+        public static string GetZh(string source)
+        {
+            if (string.IsNullOrWhiteSpace(source))
+                return string.Empty;
+            var arr = source.Split('/');
+            return arr.Length >= 1 ? arr[0].Trim() : source;
+        }
+
+        /// <summary>
+        /// 获取英文
+        /// </summary>
+        public static string GetEn(string source)
+        {
+            if (string.IsNullOrWhiteSpace(source))
+                return string.Empty;
+            var arr = source.Split('/');
+            return arr.Length >= 2 ? arr[1].Trim() : string.Empty;
+        }
+
+        /// <summary>
+        /// 自动切换语言
+        /// </summary>
+        public static string GetMsg(string source, bool isZh = true)
+        {
+            return isZh ? GetZh(source) : GetEn(source);
+        }
     }
 }
