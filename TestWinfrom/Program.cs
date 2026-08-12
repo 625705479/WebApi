@@ -14,7 +14,19 @@ namespace TestWinfrom
         [STAThread]
         static void Main()
         {
-            
+
+            //bool pass = LicenseManager.CheckLicense(out string tip);
+            //if (!pass)
+            //{
+            //    MessageBox.Show(tip, "授权校验失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return; // 直接退出，禁止进入软件
+            //}
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
         }
     }
+    
 }

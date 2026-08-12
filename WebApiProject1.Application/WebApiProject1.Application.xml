@@ -537,7 +537,7 @@
         </member>
         <member name="M:WebApiProject1.Application.UntinesHelper.EnumExtensions.GetChinese(WebApiProject1.Application.UntinesHelper.EnumExtensions.MyErrorEnum)">
             <summary>
-            获取纯中文提示（无格式化）
+            获取纯中文提示
             </summary>
         </member>
         <member name="M:WebApiProject1.Application.UntinesHelper.EnumExtensions.GetChinese(WebApiProject1.Application.UntinesHelper.EnumExtensions.MyErrorEnum,System.Object[])">
