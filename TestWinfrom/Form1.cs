@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MailKit.Security;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,7 +23,7 @@ namespace TestWinfrom
             //RsaSignHelper.GenerateRsaKeyPair(out string pri, out string pub);
             //string machineCode = HardwareHelper.GetMachineCode();
             //// 10分钟测试
-            //DateTime expire = DateTime.Now.AddMinutes(10);
+            //DateTime expire = DateTime.Now.AddMinutes(100);
             //string privateKey = @"<RSAKeyValue><Modulus>4bKHRo2yC/BbYwa+UoDueB81Cywy1dO/rQrLbfzkXP4K2W7GDIO7XMs24mk7SY0osVFZnQA+qFau5TKF2MCsf8fyyOJxblDxi4pqa3nQwM4jCeLdvZL7Qj+YBXKfNjkRJGsJJi2YAkI2M1yOc48q5CWAEftz3Jq/mcghZOoOe3Y4okeuioSy3MrnCadK+cQX3Fkrhklpjf14s6LRErCp2C8gA0On/9X9RO7peCoJ8udCwlxHrpIxrh6eDGLoDwiaLIUYA72QTcYAwMOAk+0Ir6ihnz0b3AYFErVw1/8CaCQfdWs2wYS41zWkZIG7stG0vjGnBwftKje6uwj+fBtTKQ==</Modulus><Exponent>AQAB</Exponent><P>8ztq5xLXg3AHzyuv+O19C0cjX0L1weaJkImmTD5oDUJfEcCTw1a1L0VuQ9ZS35Rq9RTht7r/1cmPq7/7GXpyz5Hb8sUPGoYHvj1LocDcTHxqpbRjdSbg6GgjWS3WLzyEHLM/TG2WAOd8mX5p9vYq3Nc4U2jVnl/VJkMq0U7G0+s=</P><Q>7Yt6IwPpgtzT6WoIYTxk2QyBTSFJbS4HbPAb+UJGQzZ2aEtMvOyrkIneVkLwpoSpE5seB8B0vSp7DHfThnqF7S9eQSBMmbB8ilmlRZah3y/DI9Kj3CwlrWHimTCLULLy9kgiCIo+yZudX8QOb57aT8SnkZMknJqFaPi5Y15GdDs=</Q><DP>E/8yjsTRyxCO0813rjN4MFEs60wKAGL/tE5cya/nxg9K2Z7Hhyu9waEnq5QXRCJjmLqaxAwvtFfZ4/jon/OdNMt9Fbx1vWx/fnhzm1zLv84KxozKEHudyf2lylMmZMPI6MMj1Ri9WF2vtL7b313lsDpReyoHRfoDAB5Nit+7IPk=</DP><DQ>Wdxhn81jELYpFCugb+hA3jr0zxDAjiTTekp6yphfrB12PY3+wZlmbY86JLe+AcA9lcUgXx5XCxh+5ACQbFb9QvSgW1K0p480DcJL2z9YjO2sjGiqxCePOT/GUN0kVqrbbn9rIH/rsKjFp+yq6V7Wh0aFfXSEbRmnTkaJGyYW0PE=</DQ><InverseQ>5hF6lYLpzpKcDSjwyzrtmZPqMlci53UoXo3yTModUqrimPV30pevKFQRpSSCmc2oeC+D1aZH2aSJk5YlWYIer7xT5aZI3vAyLAma8ptPNyFqAMU1NndlscujqCPr8ho314+6mlk3F7waXdgPZFJiG1Zb7H9pWu3sc7rSOYopnVY=</InverseQ><D>rmtAnaatXQqgJVQ1yx62rAA6ButeUd81du4rrlFMzgzJp6UyysMXDaxCOxDl7352XyomHe3tfjyXJqs3wv2LkaidGN/el0lYkeUjPvHCAO6NJ3u6r2GiaV0qB7PAFLBfbgyF4opDuiMfLewubmHK3MuaQMtZi7fPsHF4VTuIe6G6r+F4g7pJZmaKOLAETDNcbh5HTbAn5mSOinjcg7brCIQIfbmUINFd8MXBnu54IONbMott+kq+usDb0b/SRMnT7LHQvyYTZ6mzQCbvo0Nt692ImJUhc2QrxTlSfXvbM5VQWhO++RXMEhXb2A7sR34kCpmyYsZv2QuMLNLqXuhUXQ==</D></RSAKeyValue>";
             //string authCode = LicenseManager.GenerateLicenseCode(machineCode, expire, privateKey, "测试授权");
             //Console.WriteLine("激活码：" + authCode);
@@ -34,17 +35,33 @@ namespace TestWinfrom
         }
 
         public async void SendEamil() {
-            var sender = new EmailSender();
-            var dic = new Dictionary<string, object>()
+
+
+            // 初始化多条SMTP通道
+            var channelRoot = ConfigLoader.LoadEmailChannels();
+            var channels = channelRoot.Channels;
+            // 传入通道管理器
+            var channelManager = new SmtpChannelManager(channels);
+            // 收件人163邮箱，自动匹配163通道
+            string toMail = "16639421145@163.com";
+            var selectConfig = channelManager.GetAutoChannel(toMail);
+            var sender = new EmailSender(selectConfig);
+            var attachList = new List<string>()
 {
-    {"Title", "测试通知标题"},
-    {"UserName", "管理员"},
-    {"Content", "这是一条测试消息内容"},
-    {"Link", "https://www.qq.com"},
+    @"E:\backfile\2026-04-11_20260730162810947.csv"
+};
+            var model = new Dictionary<string, object>()
+{
+    {"Title","舔狗日记"},
+    {"UserName","宝宝"},
+    {"Content","其实我早就感觉到了，你对我从来没有多余的热情。\r\n所有热情都是我单方面撑起的，聊天永远是我开启，话题永远靠我寻找，我的碎碎念，在你那里只是无关紧要的消息。\r\n我一次次说服自己再坚持一下，或许再努力一点，结局就会不一样。慢慢我才懂，不喜欢就是不喜欢，再多主动和付出，也换不来对等的在意。\r\n我攒了无数次勇气来找你，最后只剩下满满的失望。我可以继续喜欢你，但我好像，再也没有力气主动了。"},
+    {"Link",""},
     {"SendTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}
 };
-            // 多个收件人逗号隔开
-            _ = sender.SendTemplateMail("625705479@qq.com", "系统通知测试", "NotifyEmail.vm", dic);
+            await sender.SendTemplateMailAsync(toMail, "系统消息", "NotifyEmail.vm", model, attachList);
+
+
+
 
 
         }

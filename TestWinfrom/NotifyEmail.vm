@@ -2,7 +2,7 @@
 <html style="margin:0;padding:0;">
 <body style="font-size:14px;color:#333;">
     <div style="padding:20px;max-width:650px;margin:auto;">
-        <h3 style="color:#2266cc;">【系统通知】${Title}</h3>
+        <h3 style="color:#2266cc;">【舔狗通知】${Title}</h3>
         <p>尊敬的 ${UserName}：</p>
         <p>${Content}</p>
 #if($Link && $Link != "")
@@ -10,7 +10,7 @@
 #end
         <p style="margin-top:30px;color:#888;">
             发送时间：${SendTime}<br/>
-            WinformDevFramework 系统
+          
         </p>
     </div>
 </body>

@@ -13,91 +13,92 @@ namespace TestWinfrom
 {
     public class EmailSender
     {
-        #region 邮箱配置，正式环境建议移到配置文件
-        private readonly string _smtpHost = "smtp.qq.com";
-        private readonly int _smtpPort = 465;       // 适配SslOnConnect
-        private readonly string _senderName = "系统通知";
-        private readonly string _senderEmail = "625705479@qq.com";
-        private readonly string _authCode = "wchawgzqkzqwbbaj";
-        #endregion
+        private readonly SmtpConfig _smtpConfig;
 
-        /// <summary>
-        /// 获取模板目录绝对路径
-        /// </summary>
+        public EmailSender(SmtpConfig smtpConfig)
+        {
+            _smtpConfig = smtpConfig ?? throw new ArgumentNullException(nameof(smtpConfig));
+        }
+
         public static string GetTemplatePath(string templateName)
         {
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, templateName);
         }
 
         /// <summary>
-        /// 发送VM模板HTML邮件【异步】
+        /// 发送模板邮件【异步主方法，支持附件】
         /// </summary>
-        /// <param name="toEmail">收件人邮箱，多个用英文逗号分隔</param>
+        /// <param name="toEmail">收件人，多个邮箱逗号分隔</param>
         /// <param name="emailSubject">邮件标题</param>
-        /// <param name="templateFileName">模板文件名：NotifyEmail.vm</param>
-        /// <param name="model">模板参数</param>
-        public async Task SendTemplateMailAsync(string toEmail, string emailSubject, string templateFileName, Dictionary<string, object> model)
+        /// <param name="templateFileName">Velocity模板文件名</param>
+        /// <param name="model">模板渲染数据</param>
+        /// <param name="attachmentFiles">附件路径集合，不传=null无附件</param>
+        public async Task SendTemplateMailAsync(string toEmail,
+            string emailSubject,
+            string templateFileName,
+            Dictionary<string, object> model,
+            List<string> attachmentFiles = null)
         {
             if (string.IsNullOrWhiteSpace(toEmail))
-                throw new ArgumentException("收件人邮箱不能为空");
+                throw new ArgumentException("收件邮箱不能为空", nameof(toEmail));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
 
-            try
+            string tplPath = GetTemplatePath(templateFileName);
+            if (!File.Exists(tplPath))
+                throw new FileNotFoundException("邮件模板文件不存在", tplPath);
+
+            string htmlBody = VelocityHelper.Render(tplPath, model);
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_smtpConfig.SenderName, _smtpConfig.SenderEmail));
+
+            var emailList = toEmail.Split(',')
+                .Select(e => e.Trim())
+                .Where(e => !string.IsNullOrEmpty(e));
+            foreach (var email in emailList)
             {
-                string tplPath = GetTemplatePath(templateFileName);
-                string htmlBody = VelocityHelper.Render(tplPath, model);
+                message.To.Add(new MailboxAddress("", email));
+            }
 
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(_senderName, _senderEmail));
+            message.Subject = emailSubject;
 
-                // 处理多个收件人：英文逗号分割，清洗空格、空地址
-                var emailList = toEmail.Split(',')
-                    .Select(e => e.Trim())
-                    .Where(e => !string.IsNullOrEmpty(e));
+            var bodyBuilder = new BodyBuilder();
+            bodyBuilder.HtmlBody = htmlBody;
 
-                foreach (var email in emailList)
+            // 加载附件
+            if (attachmentFiles != null && attachmentFiles.Any())
+            {
+                foreach (var filePath in attachmentFiles)
                 {
-                    message.To.Add(new MailboxAddress(string.Empty, email));
-                }
-
-                message.Subject = emailSubject; // 【重要修复】你原来代码缺失标题！
-                message.Body = new TextPart("html")
-                {
-                    Text = htmlBody
-                };
-
-                // using 自动释放连接
-                using (var client = new SmtpClient())
-                {
-                    // 解决国内证书吊销检查失败报错
-                    client.CheckCertificateRevocation = false;
-                    client.ServerCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
+                    if (File.Exists(filePath))
                     {
-                        // 仅放行吊销检查失败，其他证书错误拦截；如果需要彻底调试可直接 return true
-                        if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateNotAvailable)
-                            return true;
-                        return sslPolicyErrors == SslPolicyErrors.None;
-                    };
-
-                    await client.ConnectAsync(_smtpHost, _smtpPort, SecureSocketOptions.SslOnConnect);
-                    await client.AuthenticateAsync(_senderEmail, _authCode);
-                    await client.SendAsync(message, CancellationToken.None);
-                    await client.DisconnectAsync(true, CancellationToken.None);
+                        bodyBuilder.Attachments.Add(filePath);
+                    }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"邮件发送异常：{ex.Message}\r\n{ex.StackTrace}");
-                throw;
-            }
+
+            message.Body = bodyBuilder.ToMessageBody();
+
+            
+             var client = new SmtpClient();
+            client.CheckCertificateRevocation = false;
+            client.ServerCertificateValidationCallback = (s, cert, chain, err) => true;
+
+            await client.ConnectAsync(_smtpConfig.Host, _smtpConfig.Port, _smtpConfig.SecureOption);
+            await client.AuthenticateAsync(_smtpConfig.SenderEmail, _smtpConfig.Password);
+            await client.SendAsync(message, CancellationToken.None);
+            await client.DisconnectAsync(true, CancellationToken.None);
         }
 
         /// <summary>
-        /// 同步版本（Winform按钮点击调用）
+        /// 兼容旧调用：不带附件版本
         /// </summary>
-        public async Task SendTemplateMail(string toEmail, string emailSubject, string templateFileName, Dictionary<string, object> model)
+        public async Task SendTemplateMailAsync(string toEmail, string emailSubject, string templateFileName, Dictionary<string, object> model)
         {
-            // .ConfigureAwait(false).Wait() 减少WinForm上下文死锁风险
-            await SendTemplateMailAsync(toEmail, emailSubject, templateFileName, model).ConfigureAwait(false);
+            await SendTemplateMailAsync(toEmail, emailSubject, templateFileName, model, null);
         }
+
+     
     }
 }

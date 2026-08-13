@@ -1,0 +1,24 @@
+﻿{
+  "Channels": [
+    {
+      "ChannelKey": "QQ",
+      "Host": "smtp.qq.com",
+      "Port": 465,
+      "SecureOptionText": "SslOnConnect",
+      "SenderName": "舔狗日记",
+      "SenderEmail": "625705479@qq.com",
+      "Password": "wchawgzqkzqwbbaj",
+      "MatchDomains": [ "qq.com" ]
+    },
+    {
+      "ChannelKey": "163",
+      "Host": "smtp.163.com",
+      "Port": 465,
+      "SecureOptionText": "SslOnConnect",
+      "SenderName": "舔狗日记",
+      "SenderEmail": "16639421145@163.com",
+      "Password": "MXZLqKKDrnNsHaua",
+      "MatchDomains": [ "163.com", "126.com" ]
+    }
+  ]
+}
