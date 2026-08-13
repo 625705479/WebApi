@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Security;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -80,8 +79,8 @@ namespace TestWinfrom
 
             message.Body = bodyBuilder.ToMessageBody();
 
-            
-             var client = new SmtpClient();
+            // 使用using自动释放SmtpClient资源
+            var client = new SmtpClient();
             client.CheckCertificateRevocation = false;
             client.ServerCertificateValidationCallback = (s, cert, chain, err) => true;
 
@@ -92,7 +91,7 @@ namespace TestWinfrom
         }
 
         /// <summary>
-        /// 兼容旧调用：不带附件版本
+        /// 不带附件
         /// </summary>
         public async Task SendTemplateMailAsync(string toEmail, string emailSubject, string templateFileName, Dictionary<string, object> model)
         {
